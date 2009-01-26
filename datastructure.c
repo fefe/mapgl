@@ -1,0 +1,340 @@
+
+/*
+
+Data structure for Polish File Format
+
+Based on: cGPSmapper-UsrMan-v02.4.3.pdf
+Source: http://cgpsmapper.com/manual.htm
+
+*/
+
+/*
+struct pointCoord {
+	int x;
+	int y;
+	int z;
+	struct pointCoord *next;
+};
+typedef struct pointCoord point;
+*/
+
+#include <stdio.h>
+#include "datastructure.h" 
+
+/*
+	workptr = (psngr_rec*)malloc(sizeof(point));
+	if (workptr == NULL) { printf("Error building the dynamic list\n");
+		return 1;
+	}
+	actptr->nextrec = workptr; // Build the chain
+	//structptr->structfield // or the next are the same
+    //(*structptr).structfield
+*/
+
+/*
+when reading the polish format file
+	- type found - opening object tag [type] - getObjectList(type), set activeObjectList
+	- first line of object - addObjectToObjectList(activeObjectList), set activeObject
+	- reading first attribute - addAttributeToObject(activeObject, sKey, sValue)
+	- reading first point - addPointToObject(activeObject, x, y, p)
+*/
+
+void initDataStructure(void) {
+	rootObjectList=NULL;
+	activeObjectList=NULL;
+	activeObject=NULL;
+}
+
+/*
+
+Attribute
+
+*/
+
+attribute *addAttribute(attribute *curA, char *sKey, char *sValue) {
+	//Adds a new attribute after attribute curA
+	attribute *newA;
+	newA=(attribute*)malloc(sizeof(attribute));
+	if (newA == NULL) {
+		printf("Can not allocate memory for next attribute!\n");
+		return NULL;
+	}
+	if (curA != NULL) {
+		curA->next=newA;
+	}
+	newA->sKey=(char*)malloc(sizeof(char) * (strlen(sKey)+1)); //todo - error handling for malloc
+	strcpy(newA->sKey, sKey);
+	newA->sValue=(char*)malloc(sizeof(char) * (strlen(sValue)+1)); //todo - error handling for malloc
+	strcpy(newA->sValue, sValue);
+	newA->prev=curA;
+	newA->next=NULL;
+	return newA;
+}
+
+attribute *addAttributeToObject(object *curO, char *sKey, char *sValue) {
+	//Adds a new attribute to the object curO
+	if (curO == NULL) {
+		printf("Can not add new attribute to object NULL!\n");
+		return NULL;
+	}
+	attribute *newA;
+	if (curO->firstAttribute == NULL) {
+		newA=addAttribute(NULL, sKey, sValue);
+		curO->firstAttribute=newA;
+	} else {
+		newA=addAttribute(curO->lastAttribute, sKey, sValue);
+	}
+	curO->lastAttribute=newA;
+	return newA;
+}
+
+int numberOfAttributes(attribute *curA) {
+	//Returns number of attributes starting from attribute curA inclusive 
+	int i=0;
+	while (curA != NULL) {
+		i++;
+		curA=curA->next;
+	}
+	return i;
+}
+
+void deleteAttributeChain(attribute *curA) {
+	//Deletes point curP and all following points
+	//freeing a NULL pointer does not do anything, no error is generated, no need to check
+	if (curA->next != NULL) {
+		deleteAttributeChain(curA->next);
+	}
+	if (curA->prev != NULL) {
+		(curA->prev)->next=NULL;
+	}
+	free(curA->sKey);
+	free(curA->sValue);
+	free(curA);
+}
+
+/*
+
+Point
+
+*/
+
+point *addPoint(point *curP, int x, int y, int z) {
+	//Adds a new point after point curP
+	point *newP;
+	newP=(point*)malloc(sizeof(point));
+	if (newP == NULL) {
+		printf("Can not allocate memory for next point!\n");
+		return NULL;
+	}
+	if (curP != NULL) {
+		curP->next=newP;
+	}
+	newP->x=x;
+	newP->y=y;
+	newP->z=z;
+	newP->prev=curP;
+	newP->next=NULL;
+	return newP;
+}
+
+point *addPointToObject(object *curO, int x, int y, int z) {
+	//Adds a new point to the object curO
+	if (curO == NULL) {
+		printf("Can not add new point to object NULL!\n");
+		return NULL;
+	}
+	point *newP;
+	if (curO->firstPoint == NULL) {
+		newP=addPoint(NULL, x, y, z);
+		curO->firstPoint=newP;
+	} else {
+		newP=addPoint(curO->lastPoint, x, y, z);
+	}
+	curO->lastPoint=newP;
+	return newP;
+}
+
+int numberOfPoints(point *curP) {
+	//Returns number of points starting from point curP inclusive 
+	int i=0;
+	while (curP != NULL) {
+		i++;
+		curP=curP->next;
+	}
+	return i;
+}
+
+void deletePointChain(point *curP) {
+	//Deletes point curP and all following points
+	if (curP->next != NULL) {
+		deletePointChain(curP->next);
+	}
+	if (curP->prev != NULL) {
+		(curP->prev)->next=NULL;
+	}
+	free(curP);
+}
+
+/*
+
+Object
+
+*/
+
+object *addObject(object *curO) {
+	//Adds a new object after object curO
+	object *newO;
+	newO=(object*)malloc(sizeof(object));
+	if (newO == NULL) {
+		printf("Can not allocate memory for new object!\n");
+		return NULL;
+	}
+	if (curO != NULL) {
+		curO->next=newO;
+	}
+	newO->firstAttribute=NULL;
+	newO->lastAttribute=NULL;
+	newO->firstPoint=NULL;
+	newO->lastPoint=NULL;
+	newO->prev=curO;
+	newO->next=NULL;
+	return newO;
+}
+
+object *addObjectToObjectList(objectList *curOL) {
+	//Adds a new object to the object list curOL
+	if (curOL == NULL) {
+		printf("Can not add new object to object list NULL!\n");
+		return NULL;
+	}
+	object *newO;
+	if (curOL->firstObject == NULL) {
+		newO=addObject(NULL);
+		curOL->firstObject=newO;
+	} else {
+		newO=addObject(curOL->lastObject);
+	}
+	curOL->lastObject=newO;
+	return newO;
+}
+
+
+int numberOfObjects(object *curO) {
+	//Returns number of objects starting from object curO inclusive
+	int i=0;
+	while (curO != NULL) {
+		i++;
+		curO=curO->next;
+	}
+	return i;
+}
+
+void deleteObjectChain(object *curO) {
+	//Deletes object curO and all following objects	 
+	if (curO->next != NULL) {
+		deleteObjectChain(curO->next);
+	}
+	if (curO->prev != NULL) {
+		(curO->prev)->next=NULL;
+	}
+	deleteAttributeChain(curO->firstAttribute);
+	deletePointChain(curO->firstPoint);
+	free(curO);
+}
+
+/*
+
+Object list
+
+*/
+
+objectList *addObjectList(objectList *curOL, char *sType) {
+	//Adds an new object list of type after object list curOL
+	// 
+	objectList *newOL;
+	newOL=(objectList*)malloc(sizeof(objectList));
+	if (newOL == NULL) {
+		printf("Can not allocate memory for new object list!\n");
+		return NULL;
+	}
+	if (curOL != NULL) {
+		curOL->next=newOL;
+	}
+	newOL->sType=(char*)malloc(sizeof(char)*(strlen(sType)+1));
+	strcpy(newOL->sType, sType);
+	newOL->firstObject=NULL;
+	newOL->lastObject=NULL;
+	newOL->prev=curOL;
+	newOL->next=NULL;
+	return newOL;
+}
+
+objectList *getObjectList(char *sType) {
+	//Returns the object list for type, finds if exists or creates if does not exist
+	objectList *curOL;
+	curOL=findObjectList(sType);
+	if (curOL != NULL) {
+		//already exists, returning it
+		return curOL;
+	}
+	curOL=addObjectList(curOL, sType);
+	if (rootObjectList == NULL) {
+		//we had no root object list, this will be it
+		rootObjectList=curOL;
+	}
+	return curOL;
+}
+
+objectList *findObjectList(char *sType) {
+	//Search for an object list of type, starting from the root object list
+	if (rootObjectList == NULL) {
+		printf("There is no root object list yet, cannot search!\n");
+		return NULL;
+	}
+	objectList *curOL;
+	curOL=rootObjectList;
+	if (strcmp(curOL->sType, sType) == 0) {
+		return curOL;
+	}
+	while (curOL->next != NULL) {
+		curOL=curOL->next;
+		if (strcmp(curOL->sType, sType) == 0) {
+			return curOL;
+		}
+	}
+	//type was not found
+	return NULL;
+}
+
+int numberOfObjectsLists(objectList *curOL) {
+	//Returns number of objects lists starting from object list curOL inclusive
+	int i=0;
+	while (curOL != NULL) {
+		i++;
+		curOL=curOL->next;
+	}
+	return i;
+}
+
+void deleteObjectListChain(objectList *curOL) {
+	//Deletes object list curOL and all following object lists	 
+	if (curOL->next != NULL) {
+		deleteObjectListChain(curOL->next);
+	}
+	if (curOL->prev != NULL) {
+		(curOL->prev)->next=NULL;
+	}
+	deleteObjectChain(curOL->firstObject);
+	free(curOL->sType);
+	free(curOL);
+}
+
+void printAll(void) {
+	if (rootObjectList == NULL) {
+		pritnf("Root object list is NULL, nothing to print!\n");
+	} else {
+		*objectList curOL;
+		curOL=rootObjectList;		
+		while () {}
+	}
+}
