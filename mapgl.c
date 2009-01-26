@@ -226,7 +226,7 @@ int main(int argc, char* argv[])
 {
 	// >> Inicializalas
 
-	readPolishFile("terkep.mp");
+	readPolishFile("sample_map.mp");
 	printAll();
 
 	glutInit(&argc, argv);

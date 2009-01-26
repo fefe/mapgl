@@ -469,7 +469,7 @@ void readPolishFile(char *sFileName) {
 	FILE *pFile;
 	pFile = fopen(sFileName,"r");
 	if (pFile == NULL) {
-		printf("error opening file: %s", sFileName);
+		printf("error opening file: %s\n", sFileName);
 		//todo graphical error handling
 		fclose(pFile);
 		return;
