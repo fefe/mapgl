@@ -16,6 +16,7 @@ Source: http://cgpsmapper.com/manual.htm
 
 void processSection (char *sSection) {
 	int iTmp, bodyObject=0;
+printf("///processing section\n");
 	/* Body */
 	if (strcmp("POI", sSection) == 0 || strcmp("RGN10", sSection) == 0 || strcmp("RGN20", sSection) == 0) {
 		bodyObject=1;
@@ -52,6 +53,7 @@ void processSection (char *sSection) {
 		if (activeObjectList == NULL || strcmp(activeObjectList->sType, sSection) != 0) {
 			activeObjectList=getObjectList(sSection);
 		}
+printf("^^^^^adding object to objectlist");
 		activeObject=addObjectToObjectList(activeObjectList);
 	}
 }
@@ -426,12 +428,17 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 	//filtering done, valid sections and keys were found
 	char sTmp[5];
 	strncpy(sTmp, sKey, 4);
+	sTmp[4]='\0';
 	if (bodyObject == 1) {
 		if (strcmp(sTmp, "Data") != 0) {
-printf("xxxx---process tag\n");
+printf("xxxx---process tag %s\n", sTmp);
 			addAttributeToObject(activeObject, sKey, sValue);
+printObject(activeObject, 999);
+printf("xxxx---process tag ... done\n");
 		} else {
 			processData(sValue);
+printObject(activeObject, 999);
+printf("xxxx---process tag ... data ... done\n");
 		}
 	}
 }
@@ -443,9 +450,12 @@ printf("xxxx---process data start .................................\n");
 	float x, z;
 	sToken=strtok( sData, "()");
 	while (sToken != NULL) {
-		iTmp=sscanf(sData, "%f,%f", &x, &z);
-		if (iTmp == 1) {
-printf("xxxx---process data\n");
+//todo / tokenizalas ketszer olvassa be az elso darabot, megnezni miert
+printf("sdata=%s\n", sData);
+		iTmp=sscanf(sData, "(%f,%f", &x, &z);
+printf("itmp=%d\n", iTmp);
+		if (iTmp == 2) {
+printf("xxxx---process data %f %f\n", x, z);
 			addPointToObject(activeObject, x, 0.0, z); //todo - height information is is zero 
 		}
 		sToken=strtok( NULL, "()");
@@ -507,7 +517,7 @@ void readPolishFile(char *sFileName) {
 							//sSection[SECTIONWIDTH]='\0'; //strncpy puts terminating null
 							//printf("%d: [%s]\n", iLineNo, sTmp); //debug
 							printf("%d: section found:[%s] found=%d\n", iLineNo, sSection, iTmp);
-							
+							processSection(sSection);
 						} else {
 							printf("%d: section not found: length=%d\n", iLineNo, iTmp);
 						}
@@ -532,6 +542,9 @@ void readPolishFile(char *sFileName) {
 					char *sValue;
 					sKey=strtok( sLine, "=");
 					sValue=strtok( NULL, "=");
+					//todo sorvegrol leszedni a nem lathato szemetet, igy jo?
+					strReplace(sValue, '\n', '\0');
+					strReplace(sValue, '\r', '\0');
 					printf("%d: sec:%s key:%s value:%s\n", iLineNo, sSection, sKey, sValue);
 					processTag(sSection, sKey, sValue);
 				}

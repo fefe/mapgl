@@ -62,12 +62,20 @@ attribute *addAttribute(attribute *curA, char *sKey, char *sValue) {
 	if (curA != NULL) {
 		curA->next=newA;
 	}
+	char *sTmp;
 	newA->sKey=(char*)malloc(sizeof(char) * (strlen(sKey)+1)); //todo - error handling for malloc
 	strcpy(newA->sKey, sKey);
+	sTmp=newA->sKey;
+	//todo erre szukseg van?, string vege...
+	sTmp[strlen(sKey)]='\0';
 	newA->sValue=(char*)malloc(sizeof(char) * (strlen(sValue)+1)); //todo - error handling for malloc
 	strcpy(newA->sValue, sValue);
+	sTmp=newA->sValue;
+	//todo erre szukseg van?, string vege...
+	sTmp[strlen(sValue)]='\0';
 	newA->prev=curA;
 	newA->next=NULL;
+printf("debug: >>%s<< >>%s<<\n", sKey, sValue);
 	return newA;
 }
 
@@ -331,10 +339,60 @@ void deleteObjectListChain(objectList *curOL) {
 
 void printAll(void) {
 	if (rootObjectList == NULL) {
-		pritnf("Root object list is NULL, nothing to print!\n");
+		printf("Root object list is NULL, nothing to print!\n");
 	} else {
-		*objectList curOL;
-		curOL=rootObjectList;		
-		while () {}
+		printf("----------\n");
+		printObjectList(rootObjectList, 1);
+		printf("----------\n");
 	}
 }
+
+void printPoint(point *curP, int counter) {
+	if (curP == NULL) {
+		//printf("NULL(point)");
+		printf("\n");
+		return;
+	} else {
+		printf("%d:(%d, %d, %d) ", counter, curP->x, curP->y, curP->z);
+	}
+	printPoint(curP->next, ++counter);
+}
+
+void printAttribute(attribute *curA, int counter) {
+	if (curA == NULL) {
+		//printf("NULL(attribute)");
+		printf("\n");
+		return;
+	} else {
+		printf("%d:(%s=%s) ", counter, curA->sKey, curA->sValue);
+	}
+	printAttribute(curA->next, ++counter);
+}
+
+void printObject(object *curO, int counter) {
+	if (curO == NULL) {
+		//printf("NULL(object)");
+		//printf("\n");
+		return;
+	} else {
+		printf("\tObject: %d\n", counter);
+		printf("\t\tAttributes: ");
+		printAttribute(curO->firstAttribute, 1);
+		printf("\t\tPoints: ");
+		printPoint(curO->firstPoint, 1);
+	}
+	printObject(curO->next, ++counter);
+}
+
+void printObjectList(objectList *curOL, int counter) {
+	if (curOL == NULL) {
+		//printf("NULL(objectList)");
+		//printf("\n");
+		return;
+	} else {
+		printf("ObjectList: %d [%s]\n", counter, curOL->sType);
+		printObject(curOL->firstObject, 1);
+	}
+	printObjectList(curOL->next, ++counter);
+}
+

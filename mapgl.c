@@ -227,6 +227,7 @@ int main(int argc, char* argv[])
 	// >> Inicializalas
 
 	readPolishFile("terkep.mp");
+	printAll();
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);

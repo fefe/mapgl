@@ -82,6 +82,11 @@ int numberOfObjectsLists(objectList *curOL);
 void deleteObjectListChain(objectList *curOL);
 
 
+void printAll(void);
+void printPoint(point *curP, int counter);
+void printAttribute(attribute *curA, int counter);
+void printObject(object *curO, int counter);
+void printObjectList(objectList *curOL, int counter);
 
 
 #endif /* __datastrucure_h_*/
