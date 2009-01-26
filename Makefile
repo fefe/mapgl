@@ -1,4 +1,4 @@
-#	Makefile for Phigs examples
+#	Makefile for MapGL
 
 APPS = mapgl
 OBJ = $(APPS).o datastructure.o stringhandling.o polishfm.o
