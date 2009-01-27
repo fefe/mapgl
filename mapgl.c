@@ -23,7 +23,7 @@ GLfloat yRot = 0.0f;
 
 
 // Called to draw scene
-void RenderScene(void)
+void Display(void)
 {
 	// Clear the window with current clearing color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -34,6 +34,10 @@ void RenderScene(void)
 
 	// >> Modellezo programresz
 
+	if (poi) {
+		glColor3f(1,1,1);
+		glCallList(dlPoi);
+	}
 	// ...
 
 	// << Modellezo programresz
@@ -232,8 +236,12 @@ int main(int argc, char* argv[])
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	//glutInitWindowSize(300, 300);
-	glutCreateWindow("GLUT Alap");
+	glutCreateWindow("Map GL");
 
+	//creates the display lists
+printf("************debug: pm");
+	displayPolishMap();
+	
 	// << Inicializalas
 
 	// >> Callback fuggvenyek
@@ -243,7 +251,7 @@ int main(int argc, char* argv[])
 
 	glutSpecialFunc(SpecialKeys);
 	glutKeyboardFunc(Keyboard);
-	glutDisplayFunc(RenderScene);
+	glutDisplayFunc(Display);
 	glutTimerFunc(1000, Timer, 1); // 1 mp mulva meghivodik a Timer() fuggveny
 	//glutIdleFunc(Idle); // Idle(), ha nem tortenik semmi
 	

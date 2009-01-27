@@ -8,6 +8,7 @@ Source: http://cgpsmapper.com/manual.htm
 
 */
 
+#include <GL/glut.h>
 #include <stdio.h>
 #include <string.h>
 #include "stringhandling.h"
@@ -554,4 +555,39 @@ void readPolishFile(char *sFileName) {
 	}
 } 
 
+void displayPolishMap(void) {
+	//display the objects stored in the data structure
+	if (rootObjectList == NULL) {
+		printf("Root object list is NULL, nothing to display!\n");
+		return;
+	}
 
+	objectList *curOL;
+	curOL=rootObjectList;
+	do {
+		if (stricmp("POI", curOL->sType) == 0) {
+			//todo - optimize with separate display lists
+			object *curO;
+			curO=curOL->firstObject;
+			if (curO != NULL) {
+				//if we have an object, create a display list for that type
+				poi=1;
+				dlPoi=glGenLists(1);
+				glNewList(dlPoi, GL_COMPILE);
+					glBegin(GL_POINT);
+						do {
+printf("vertex ");
+							glVertex3f(curO->firstPoint->x, curO->firstPoint->y, curO->firstPoint->z);
+							curO=curO->next;
+						} while (curO != NULL);
+					glEnd();
+				glEndList();
+			}
+		} else if (stricmp("todo", curOL->sType) == 0) {
+			//todo the other object types
+		}
+		curOL=curOL->next;
+	} while (curOL != NULL);
+	
+	
+}

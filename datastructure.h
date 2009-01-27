@@ -48,6 +48,9 @@ objectList *activeObjectList;
 object *activeObject;
 point *activePoint;
 
+int minx, maxx, miny, maxy, minz, maxz, centerx, centery, centerz;
+int poi, dlPoi;
+
 /*
 	workptr = (psngr_rec*)malloc(sizeof(point));
 	if (workptr == NULL) { printf("Error building the dynamic list\n");

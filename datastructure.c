@@ -19,6 +19,7 @@ typedef struct pointCoord point;
 */
 
 #include <stdio.h>
+#include <string.h>
 #include "datastructure.h" 
 
 /*
@@ -43,6 +44,18 @@ void initDataStructure(void) {
 	rootObjectList=NULL;
 	activeObjectList=NULL;
 	activeObject=NULL;
+	//todo - check to make sure default values are correct
+	minx=400;
+	maxx=-400;
+	miny=-11000; //depth in meters
+	maxy=11000; //height in meters
+	minz=400;
+	maxz=-400;
+	centerx=0;
+	centery=0;
+	centerz=0;
+
+	poi=0;
 }
 
 /*
@@ -142,6 +155,14 @@ point *addPoint(point *curP, int x, int y, int z) {
 	newP->z=z;
 	newP->prev=curP;
 	newP->next=NULL;
+
+	//set border values
+	if (x<minx) minx=x;
+	if (y<miny) miny=y;
+	if (z<minz) minz=z;
+	if (x>maxx) maxx=x;
+	if (y>maxy) maxy=y;
+	if (z>maxz) maxz=z;
 	return newP;
 }
 
