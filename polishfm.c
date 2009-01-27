@@ -18,30 +18,30 @@ void processSection (char *sSection) {
 	int iTmp, bodyObject=0;
 printf("///processing section\n");
 	/* Body */
-	if (strcmp("POI", sSection) == 0 || strcmp("RGN10", sSection) == 0 || strcmp("RGN20", sSection) == 0) {
+	if (stricmp("POI", sSection) == 0 || stricmp("RGN10", sSection) == 0 || stricmp("RGN20", sSection) == 0) {
 		bodyObject=1;
-	} else if (strcmp("POLYGON", sSection) == 0 || strcmp("RGN80", sSection) == 0) {
+	} else if (stricmp("POLYGON", sSection) == 0 || stricmp("RGN80", sSection) == 0) {
 		/* Body */
 		bodyObject=1;
-	} else if (strcmp("POLYLINE", sSection) == 0 || strcmp("RGN40", sSection) == 0) {
+	} else if (stricmp("POLYLINE", sSection) == 0 || stricmp("RGN40", sSection) == 0) {
 		/* Body */
 		bodyObject=1;
-	} else if (strcmp("WPT", sSection) == 0) {
+	} else if (stricmp("WPT", sSection) == 0) {
 		/* Body */
 		bodyObject=1;
-	} else if (strcmp("PLT", sSection) == 0) {
+	} else if (stricmp("PLT", sSection) == 0) {
 		/* Body */
 		bodyObject=1;
-	} else if (strcmp("SHP", sSection) == 0) {
+	} else if (stricmp("SHP", sSection) == 0) {
 		/* Body */
 		bodyObject=1;
-	} else if (strcmp("DBX", sSection) == 0) {
+	} else if (stricmp("DBX", sSection) == 0) {
 		/* Body */
 		bodyObject=1;
 		//undocumented
 		printf("--- Undocumented section found: %s\n", sSection);
 		return;
-	} else if (strcmp("FILE", sSection) == 0) {
+	} else if (stricmp("FILE", sSection) == 0) {
 		/* Body */
 		bodyObject=1;
 	} else {
@@ -50,7 +50,7 @@ printf("///processing section\n");
 	}
 	//filtering done, valid sections were found
 	if (bodyObject == 1) {
-		if (activeObjectList == NULL || strcmp(activeObjectList->sType, sSection) != 0) {
+		if (activeObjectList == NULL || stricmp(activeObjectList->sType, sSection) != 0) {
 			activeObjectList=getObjectList(sSection);
 		}
 printf("^^^^^adding object to objectlist");
@@ -90,121 +90,121 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 	 */
 
 	int iTmp, bodyObject=0;
-	if (strcmp("IMG_ID", sSection) == 0) {
+	if (stricmp("IMG_ID", sSection) == 0) {
 		/* Header */
 		//mandatory
-		if (strcmp("ID", sKey) == 0) {
+		if (stricmp("ID", sKey) == 0) {
 			//mandatory
 			sscanf(sValue, "%d", &iImgId);
-		} else if (strcmp("Name", sKey) == 0) {
+		} else if (stricmp("Name", sKey) == 0) {
 			//mandatory
 			sImgName=(char*)malloc(sizeof(char)*(strlen(sValue)+1));
 			strcpy(sImgName, sValue);
-		} else if (strcmp("LBLcoding", sKey) == 0) {
-		} else if (strcmp("Codepage", sKey) == 0) {
-		} else if (strcmp("Datum", sKey) == 0) {
-		} else if (strcmp("Transparent", sKey) == 0) {
-		} else if (strcmp("MG", sKey) == 0) {
-		} else if (strcmp("Numbering", sKey) == 0) {
-		} else if (strcmp("Routing", sKey) == 0) {
-		} else if (strcmp("Lock", sKey) == 0) {
-		} else if (strcmp("ProductCode", sKey) == 0) {
-		} else if (strcmp("CopyRight", sKey) == 0) {
-		} else if (strcmp("Elevation", sKey) == 0) {
-		} else if (strcmp("POIOnly", sKey) == 0) {
-		} else if (strcmp("POIIndex", sKey) == 0) {
-		} else if (strcmp("POINumberFirst", sKey) == 0) {
-		} else if (strcmp("POIZipFirst", sKey) == 0) {
-		} else if (strcmp("DefaultCityCountry", sKey) == 0) {
-		} else if (strcmp("DefaultRegionCount", sKey) == 0) {
-		} else if (strcmp("TreSize", sKey) == 0) {
+		} else if (stricmp("LBLcoding", sKey) == 0) {
+		} else if (stricmp("Codepage", sKey) == 0) {
+		} else if (stricmp("Datum", sKey) == 0) {
+		} else if (stricmp("Transparent", sKey) == 0) {
+		} else if (stricmp("MG", sKey) == 0) {
+		} else if (stricmp("Numbering", sKey) == 0) {
+		} else if (stricmp("Routing", sKey) == 0) {
+		} else if (stricmp("Lock", sKey) == 0) {
+		} else if (stricmp("ProductCode", sKey) == 0) {
+		} else if (stricmp("CopyRight", sKey) == 0) {
+		} else if (stricmp("Elevation", sKey) == 0) {
+		} else if (stricmp("POIOnly", sKey) == 0) {
+		} else if (stricmp("POIIndex", sKey) == 0) {
+		} else if (stricmp("POINumberFirst", sKey) == 0) {
+		} else if (stricmp("POIZipFirst", sKey) == 0) {
+		} else if (stricmp("DefaultCityCountry", sKey) == 0) {
+		} else if (stricmp("DefaultRegionCount", sKey) == 0) {
+		} else if (stricmp("TreSize", sKey) == 0) {
 			//mandatory
-		} else if (strcmp("RgnLimit", sKey) == 0) {
+		} else if (stricmp("RgnLimit", sKey) == 0) {
 			//mandatory
-		} else if (strcmp("SimplifyLevel", sKey) == 0) {
-		} else if (strcmp("PreProcess", sKey) == 0) {
-		} else if (strcmp("Levels", sKey) == 0) {
+		} else if (stricmp("SimplifyLevel", sKey) == 0) {
+		} else if (stricmp("PreProcess", sKey) == 0) {
+		} else if (stricmp("Levels", sKey) == 0) {
 			//mandatory
-		} else if (strcmp("Level#", sKey) == 0) {
+		} else if (stricmp("Level#", sKey) == 0) {
 			//mandatory
 			//todo - # has to be replaced in matching patter to a real digit
-		} else if (strcmp("Zoom#", sKey) == 0) {
+		} else if (stricmp("Zoom#", sKey) == 0) {
 			//todo - # has to be replaced in matching patter to a real digit
-		} else if (strcmp("Preview", sKey) == 0) {
-		} else if (strcmp("AlighMethod", sKey) == 0) {
-		} else if (strcmp("BlockSize", sKey) == 0) {
-		} else if (strcmp("LevelFill", sKey) == 0) {
-		} else if (strcmp("LevelLimit", sKey) == 0) {
-		} else if (strcmp("WorldMap", sKey) == 0) {
-		} else if (strcmp("DrawPriority", sKey) == 0) {
-		} else if (strcmp("Marine", sKey) == 0) {
-		} else if (strcmp("", sKey) == 0) {
+		} else if (stricmp("Preview", sKey) == 0) {
+		} else if (stricmp("AlighMethod", sKey) == 0) {
+		} else if (stricmp("BlockSize", sKey) == 0) {
+		} else if (stricmp("LevelFill", sKey) == 0) {
+		} else if (stricmp("LevelLimit", sKey) == 0) {
+		} else if (stricmp("WorldMap", sKey) == 0) {
+		} else if (stricmp("DrawPriority", sKey) == 0) {
+		} else if (stricmp("Marine", sKey) == 0) {
+		} else if (stricmp("", sKey) == 0) {
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
 		}
-	} else if (strcmp("COUNTRIES", sSection) == 0) {
+	} else if (stricmp("COUNTRIES", sSection) == 0) {
 		/*  Declarations */
-		if (strcmp("Country#", sKey) == 0) {
+		if (stricmp("Country#", sKey) == 0) {
 			//mandatory
 			//todo - # has to be replaced in matching patter to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
 		}
-	} else if (strcmp("REGIONS", sSection) == 0) {
+	} else if (stricmp("REGIONS", sSection) == 0) {
 		/*  Declarations */
-		if (strcmp("Region#", sKey) == 0) {
+		if (stricmp("Region#", sKey) == 0) {
 			//mandatory
 			//todo - # has to be replaced in matching patter to a real digit
-		} else if (strcmp("CountryIdx#", sKey) == 0) {
+		} else if (stricmp("CountryIdx#", sKey) == 0) {
 			//mandatory
 			//todo - # has to be replaced in matching patter to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
 		}
-	} else if (strcmp("CITIES", sSection) == 0) {
+	} else if (stricmp("CITIES", sSection) == 0) {
 		/*  Declarations */
-		if (strcmp("City#", sKey) == 0) {
-		} else if (strcmp("RegionIdx#", sKey) == 0) {
+		if (stricmp("City#", sKey) == 0) {
+		} else if (stricmp("RegionIdx#", sKey) == 0) {
 			//mandatory
 			//todo - # has to be replaced in matching patter to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
 		}
-	} else if (strcmp("CHART_INFO", sSection) == 0) {
+	} else if (stricmp("CHART_INFO", sSection) == 0) {
 		/*  Declarations */
-		if (strcmp("Name", sKey) == 0) {
-		} else if (strcmp("Number", sKey) == 0) {
-		} else if (strcmp("Projection", sKey) == 0) {
-		} else if (strcmp("Published", sKey) == 0) {
-		} else if (strcmp("Scale", sKey) == 0) {
-		} else if (strcmp("DeltaSN", sKey) == 0) {
-		} else if (strcmp("DeltaWE", sKey) == 0) {
-		} else if (strcmp("IALA", sKey) == 0) {
-		} else if (strcmp("Print", sKey) == 0) {
-		} else if (strcmp("Edition", sKey) == 0) {
-		} else if (strcmp("Correction", sKey) == 0) {
-		} else if (strcmp("Text", sKey) == 0) {
-		} else if (strcmp("TextFile", sKey) == 0) {
-		} else if (strcmp("ReferenceEllipsoid", sKey) == 0) {
+		if (stricmp("Name", sKey) == 0) {
+		} else if (stricmp("Number", sKey) == 0) {
+		} else if (stricmp("Projection", sKey) == 0) {
+		} else if (stricmp("Published", sKey) == 0) {
+		} else if (stricmp("Scale", sKey) == 0) {
+		} else if (stricmp("DeltaSN", sKey) == 0) {
+		} else if (stricmp("DeltaWE", sKey) == 0) {
+		} else if (stricmp("IALA", sKey) == 0) {
+		} else if (stricmp("Print", sKey) == 0) {
+		} else if (stricmp("Edition", sKey) == 0) {
+		} else if (stricmp("Correction", sKey) == 0) {
+		} else if (stricmp("Text", sKey) == 0) {
+		} else if (stricmp("TextFile", sKey) == 0) {
+		} else if (stricmp("ReferenceEllipsoid", sKey) == 0) {
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
 		}
-	} else if (strcmp("BACKGROUND", sSection) == 0) {
+	} else if (stricmp("BACKGROUND", sSection) == 0) {
 		/* Advanced declarations */
-		if (strcmp("Name", sKey) == 0) {
+		if (stricmp("Name", sKey) == 0) {
 			//mandatory
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
 		}
-	} else if (strcmp("DICTIONARY", sSection) == 0) {
+	} else if (stricmp("DICTIONARY", sSection) == 0) {
 		/* Advanced declarations */
-		if (strcmp("Level#RGNnn", sKey) == 0) {
+		if (stricmp("Level#RGNnn", sKey) == 0) {
 			//mandatory
 			//todo - # has to be replaced in matching patter to a real digit
 			//todo - nn has to be replaced in matching patter to a real digit
@@ -212,210 +212,210 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
 		}
-	} else if (strcmp("HIGHWAYS", sSection) == 0) {
+	} else if (stricmp("HIGHWAYS", sSection) == 0) {
 		/* Advanced declarations */
 		//undocumented
 		printf("--- Undocumented section found: %s\n", sSection);
 		return;
-	} else if (strcmp("ZIPCODES", sSection) == 0) {
+	} else if (stricmp("ZIPCODES", sSection) == 0) {
 		/* Advanced declarations */
 		//undocumented
 		printf("--- Undocumented section found: %s\n", sSection);
 		return;
-	} else if (strcmp("DEFINITIONS", sSection) == 0) {
+	} else if (stricmp("DEFINITIONS", sSection) == 0) {
 		/* Advanced declarations */
 		//undocumented
 		printf("--- Undocumented section found: %s\n", sSection);
 		return;
-	} else if (strcmp("POI", sSection) == 0 || strcmp("RGN10", sSection) == 0 || strcmp("RGN20", sSection) == 0) {
+	} else if (stricmp("POI", sSection) == 0 || stricmp("RGN10", sSection) == 0 || stricmp("RGN20", sSection) == 0) {
 		/* Body */
 		bodyObject=1;
-		if (strcmp("Type", sKey) == 0) {
+		if (stricmp("Type", sKey) == 0) {
 			//mandatory
-		} else if (strcmp("SubType", sKey) == 0) {
-		} else if (strcmp("Marine", sKey) == 0) {
-		} else if (strcmp("City", sKey) == 0) {
-		} else if (strcmp("Label", sKey) == 0) {
-		} else if (strcmp("EndLevel", sKey) == 0) {
-		} else if (strcmp("Data1", sKey) == 0) {
+		} else if (stricmp("SubType", sKey) == 0) {
+		} else if (stricmp("Marine", sKey) == 0) {
+		} else if (stricmp("City", sKey) == 0) {
+		} else if (stricmp("Label", sKey) == 0) {
+		} else if (stricmp("EndLevel", sKey) == 0) {
+		} else if (stricmp("Data1", sKey) == 0) {
 			//mandatory
-		} else if (strcmp("Data#", sKey) == 0) {
+		} else if (stricmp("Data#", sKey) == 0) {
 			//mandatory
 			//todo - # has to be replaced in matching patter to a real digit
-		} else if (strcmp("StreetDesc", sKey) == 0) {
-		} else if (strcmp("OvernightParking", sKey) == 0) {
-		} else if (strcmp("Highway", sKey) == 0) {
-		} else if (strcmp("CityName", sKey) == 0) {
-		} else if (strcmp("RegionName", sKey) == 0) {
-		} else if (strcmp("CountryName", sKey) == 0) {
-		} else if (strcmp("Zip", sKey) == 0) {
-		} else if (strcmp("Exit#", sKey) == 0) {
+		} else if (stricmp("StreetDesc", sKey) == 0) {
+		} else if (stricmp("OvernightParking", sKey) == 0) {
+		} else if (stricmp("Highway", sKey) == 0) {
+		} else if (stricmp("CityName", sKey) == 0) {
+		} else if (stricmp("RegionName", sKey) == 0) {
+		} else if (stricmp("CountryName", sKey) == 0) {
+		} else if (stricmp("Zip", sKey) == 0) {
+		} else if (stricmp("Exit#", sKey) == 0) {
 			//todo - # has to be replaced in matching patter to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
 		}
-	} else if (strcmp("POLYGON", sSection) == 0 || strcmp("RGN80", sSection) == 0) {
+	} else if (stricmp("POLYGON", sSection) == 0 || stricmp("RGN80", sSection) == 0) {
 		/* Body */
 		bodyObject=1;
-		if (strcmp("Type", sKey) == 0) {
+		if (stricmp("Type", sKey) == 0) {
 			//mandatory
-		} else if (strcmp("SubType", sKey) == 0) {
-		} else if (strcmp("Marine", sKey) == 0) {
-		} else if (strcmp("Label", sKey) == 0) {
-		} else if (strcmp("EndLevel", sKey) == 0) {
-		} else if (strcmp("Background", sKey) == 0) {
-		} else if (strcmp("Data1", sKey) == 0) {
+		} else if (stricmp("SubType", sKey) == 0) {
+		} else if (stricmp("Marine", sKey) == 0) {
+		} else if (stricmp("Label", sKey) == 0) {
+		} else if (stricmp("EndLevel", sKey) == 0) {
+		} else if (stricmp("Background", sKey) == 0) {
+		} else if (stricmp("Data1", sKey) == 0) {
 			//mandatory
-		} else if (strcmp("Data#", sKey) == 0) {
-			//mandatory
-			//todo - # has to be replaced in matching patter to a real digit
-		} else {
-			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
-			return;
-		}
-	} else if (strcmp("POLYLINE", sSection) == 0 || strcmp("RGN40", sSection) == 0) {
-		/* Body */
-		bodyObject=1;
-		if (strcmp("Type", sKey) == 0) {
-		} else if (strcmp("SubType", sKey) == 0) {
-		} else if (strcmp("Marine", sKey) == 0) {
-		} else if (strcmp("Label", sKey) == 0) {
-		} else if (strcmp("Label2", sKey) == 0) {
-		} else if (strcmp("EndLevel", sKey) == 0) {
-		} else if (strcmp("Data1", sKey) == 0) {
-			//mandatory
-		} else if (strcmp("Data#", sKey) == 0) {
-			//mandatory
-			//todo - # has to be replaced in matching patter to a real digit
-		} else if (strcmp("StreetDesc", sKey) == 0) {
-		} else if (strcmp("DirIndicator", sKey) == 0) {
-		} else if (strcmp("CityName", sKey) == 0) {
-		} else if (strcmp("RegionName", sKey) == 0) {
-		} else if (strcmp("CountryName", sKey) == 0) {
-		} else if (strcmp("Zip", sKey) == 0) {
-		} else if (strcmp("RoadID", sKey) == 0) {
-		} else if (strcmp("Numbers#", sKey) == 0) {
-			//todo - # has to be replaced in matching patter to a real digit
-		} else if (strcmp("Routeparam", sKey) == 0) {
-		} else if (strcmp("NodID", sKey) == 0) {
-			//todo - # has to be replaced in matching patter to a real digit
-		} else {
-			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
-			return;
-		}
-	} else if (strcmp("WPT", sSection) == 0) {
-		/* Body */
-		bodyObject=1;
-		if (strcmp("", sKey) == 0) {
-		} else if (strcmp("RgnType", sKey) == 0) {
-			//mandatory
-		} else if (strcmp("Type", sKey) == 0) {
-			//mandatory
-		} else if (strcmp("EndLevel", sKey) == 0) {
-		} else if (strcmp("File#", sKey) == 0) {
+		} else if (stricmp("Data#", sKey) == 0) {
 			//mandatory
 			//todo - # has to be replaced in matching patter to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
 		}
-	} else if (strcmp("PLT", sSection) == 0) {
+	} else if (stricmp("POLYLINE", sSection) == 0 || stricmp("RGN40", sSection) == 0) {
 		/* Body */
 		bodyObject=1;
-		if (strcmp("RgnType", sKey) == 0) {
+		if (stricmp("Type", sKey) == 0) {
+		} else if (stricmp("SubType", sKey) == 0) {
+		} else if (stricmp("Marine", sKey) == 0) {
+		} else if (stricmp("Label", sKey) == 0) {
+		} else if (stricmp("Label2", sKey) == 0) {
+		} else if (stricmp("EndLevel", sKey) == 0) {
+		} else if (stricmp("Data1", sKey) == 0) {
 			//mandatory
-		} else if (strcmp("Type", sKey) == 0) {
+		} else if (stricmp("Data#", sKey) == 0) {
 			//mandatory
-		} else if (strcmp("Label", sKey) == 0) {
-		} else if (strcmp("DirIndicator", sKey) == 0) {
-		} else if (strcmp("EndLevel", sKey) == 0) {
-		} else if (strcmp("File#", sKey) == 0) {
+			//todo - # has to be replaced in matching patter to a real digit
+		} else if (stricmp("StreetDesc", sKey) == 0) {
+		} else if (stricmp("DirIndicator", sKey) == 0) {
+		} else if (stricmp("CityName", sKey) == 0) {
+		} else if (stricmp("RegionName", sKey) == 0) {
+		} else if (stricmp("CountryName", sKey) == 0) {
+		} else if (stricmp("Zip", sKey) == 0) {
+		} else if (stricmp("RoadID", sKey) == 0) {
+		} else if (stricmp("Numbers#", sKey) == 0) {
+			//todo - # has to be replaced in matching patter to a real digit
+		} else if (stricmp("Routeparam", sKey) == 0) {
+		} else if (stricmp("NodID", sKey) == 0) {
+			//todo - # has to be replaced in matching patter to a real digit
+		} else {
+			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
+			return;
+		}
+	} else if (stricmp("WPT", sSection) == 0) {
+		/* Body */
+		bodyObject=1;
+		if (stricmp("", sKey) == 0) {
+		} else if (stricmp("RgnType", sKey) == 0) {
+			//mandatory
+		} else if (stricmp("Type", sKey) == 0) {
+			//mandatory
+		} else if (stricmp("EndLevel", sKey) == 0) {
+		} else if (stricmp("File#", sKey) == 0) {
 			//mandatory
 			//todo - # has to be replaced in matching patter to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
 		}
-	} else if (strcmp("SHP", sSection) == 0) {
+	} else if (stricmp("PLT", sSection) == 0) {
 		/* Body */
 		bodyObject=1;
-		if (strcmp("name", sKey) == 0) {
+		if (stricmp("RgnType", sKey) == 0) {
 			//mandatory
-		} else if (strcmp("Type", sKey) == 0) {
+		} else if (stricmp("Type", sKey) == 0) {
 			//mandatory
-		} else if (strcmp("LabelField", sKey) == 0) {
-		} else if (strcmp("Label2Field", sKey) == 0) {
+		} else if (stricmp("Label", sKey) == 0) {
+		} else if (stricmp("DirIndicator", sKey) == 0) {
+		} else if (stricmp("EndLevel", sKey) == 0) {
+		} else if (stricmp("File#", sKey) == 0) {
 			//mandatory
-		} else if (strcmp("TypeField", sKey) == 0) {
-		} else if (strcmp("SubTypeField", sKey) == 0) {
-		} else if (strcmp("DirField", sKey) == 0) {
-		} else if (strcmp("Level", sKey) == 0) {
-			//mandatory
-		} else if (strcmp("EndLevel", sKey) == 0) {
-			//mandatory
-		} else if (strcmp("DefaultType", sKey) == 0) {
-		} else if (strcmp("CityName", sKey) == 0) {
-		} else if (strcmp("RegionName", sKey) == 0) {
-		} else if (strcmp("CountryName", sKey) == 0) {
-		} else if (strcmp("HouseNumber", sKey) == 0) {
-		} else if (strcmp("StreetDesc", sKey) == 0) {
-		} else if (strcmp("PhoneNumber", sKey) == 0) {
-		} else if (strcmp("Zip", sKey) == 0) {
-		} else if (strcmp("RoatID", sKey) == 0) {
-		} else if (strcmp("SpeedType", sKey) == 0) {
-		} else if (strcmp("RoadClass", sKey) == 0) {
-		} else if (strcmp("OneWay", sKey) == 0) {
-		} else if (strcmp("Toll", sKey) == 0) {
-		} else if (strcmp("VehicleD", sKey) == 0) {
-		} else if (strcmp("VehicleC", sKey) == 0) {
-		} else if (strcmp("VehicleB", sKey) == 0) {
-		} else if (strcmp("VehicleT", sKey) == 0) {
-		} else if (strcmp("VehicleP", sKey) == 0) {
-		} else if (strcmp("VehicleI", sKey) == 0) {
-		} else if (strcmp("VehicleR", sKey) == 0) {
-		} else if (strcmp("TextFileLines", sKey) == 0) {
-		} else if (strcmp("TextStart", sKey) == 0) {
-		} else if (strcmp("TextEnd", sKey) == 0) {
-		} else if (strcmp("TextFile", sKey) == 0) {
-		} else if (strcmp("Color", sKey) == 0) {
-		} else if (strcmp("Style", sKey) == 0) {
-		} else if (strcmp("Height", sKey) == 0) {
-		} else if (strcmp("Depth", sKey) == 0) {
-		} else if (strcmp("DepthUnit", sKey) == 0) {
-		} else if (strcmp("HeightUnit", sKey) == 0) {
-		} else if (strcmp("Position", sKey) == 0) {
-		} else if (strcmp("DepthFlag", sKey) == 0) {
-		} else if (strcmp("FoundationColor", sKey) == 0) {
-		} else if (strcmp("Light", sKey) == 0) {
-		} else if (strcmp("LightType", sKey) == 0) {
-		} else if (strcmp("Note", sKey) == 0) {
-		} else if (strcmp("LocalDesignator", sKey) == 0) {
-		} else if (strcmp("IngernationalDesignator", sKey) == 0) {
-		} else if (strcmp("Period", sKey) == 0) {
-		} else if (strcmp("HeightAboveFoundation", sKey) == 0) {
-		} else if (strcmp("HeightAboveDatum", sKey) == 0) {
-		} else if (strcmp("HeightAboveFoundationUnit", sKey) == 0) {
-		} else if (strcmp("HeightAboveDatumUnit", sKey) == 0) {
-		} else if (strcmp("LeadingAngle", sKey) == 0) {
-		} else if (strcmp("Racon", sKey) == 0) {
-		} else if (strcmp("DoubleLights", sKey) == 0) {
-		} else if (strcmp("DoubleLightsHorizontal", sKey) == 0) {
-		} else if (strcmp("FacilityPoint", sKey) == 0) {
+			//todo - # has to be replaced in matching patter to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
 		}
-	} else if (strcmp("DBX", sSection) == 0) {
+	} else if (stricmp("SHP", sSection) == 0) {
+		/* Body */
+		bodyObject=1;
+		if (stricmp("name", sKey) == 0) {
+			//mandatory
+		} else if (stricmp("Type", sKey) == 0) {
+			//mandatory
+		} else if (stricmp("LabelField", sKey) == 0) {
+		} else if (stricmp("Label2Field", sKey) == 0) {
+			//mandatory
+		} else if (stricmp("TypeField", sKey) == 0) {
+		} else if (stricmp("SubTypeField", sKey) == 0) {
+		} else if (stricmp("DirField", sKey) == 0) {
+		} else if (stricmp("Level", sKey) == 0) {
+			//mandatory
+		} else if (stricmp("EndLevel", sKey) == 0) {
+			//mandatory
+		} else if (stricmp("DefaultType", sKey) == 0) {
+		} else if (stricmp("CityName", sKey) == 0) {
+		} else if (stricmp("RegionName", sKey) == 0) {
+		} else if (stricmp("CountryName", sKey) == 0) {
+		} else if (stricmp("HouseNumber", sKey) == 0) {
+		} else if (stricmp("StreetDesc", sKey) == 0) {
+		} else if (stricmp("PhoneNumber", sKey) == 0) {
+		} else if (stricmp("Zip", sKey) == 0) {
+		} else if (stricmp("RoatID", sKey) == 0) {
+		} else if (stricmp("SpeedType", sKey) == 0) {
+		} else if (stricmp("RoadClass", sKey) == 0) {
+		} else if (stricmp("OneWay", sKey) == 0) {
+		} else if (stricmp("Toll", sKey) == 0) {
+		} else if (stricmp("VehicleD", sKey) == 0) {
+		} else if (stricmp("VehicleC", sKey) == 0) {
+		} else if (stricmp("VehicleB", sKey) == 0) {
+		} else if (stricmp("VehicleT", sKey) == 0) {
+		} else if (stricmp("VehicleP", sKey) == 0) {
+		} else if (stricmp("VehicleI", sKey) == 0) {
+		} else if (stricmp("VehicleR", sKey) == 0) {
+		} else if (stricmp("TextFileLines", sKey) == 0) {
+		} else if (stricmp("TextStart", sKey) == 0) {
+		} else if (stricmp("TextEnd", sKey) == 0) {
+		} else if (stricmp("TextFile", sKey) == 0) {
+		} else if (stricmp("Color", sKey) == 0) {
+		} else if (stricmp("Style", sKey) == 0) {
+		} else if (stricmp("Height", sKey) == 0) {
+		} else if (stricmp("Depth", sKey) == 0) {
+		} else if (stricmp("DepthUnit", sKey) == 0) {
+		} else if (stricmp("HeightUnit", sKey) == 0) {
+		} else if (stricmp("Position", sKey) == 0) {
+		} else if (stricmp("DepthFlag", sKey) == 0) {
+		} else if (stricmp("FoundationColor", sKey) == 0) {
+		} else if (stricmp("Light", sKey) == 0) {
+		} else if (stricmp("LightType", sKey) == 0) {
+		} else if (stricmp("Note", sKey) == 0) {
+		} else if (stricmp("LocalDesignator", sKey) == 0) {
+		} else if (stricmp("IngernationalDesignator", sKey) == 0) {
+		} else if (stricmp("Period", sKey) == 0) {
+		} else if (stricmp("HeightAboveFoundation", sKey) == 0) {
+		} else if (stricmp("HeightAboveDatum", sKey) == 0) {
+		} else if (stricmp("HeightAboveFoundationUnit", sKey) == 0) {
+		} else if (stricmp("HeightAboveDatumUnit", sKey) == 0) {
+		} else if (stricmp("LeadingAngle", sKey) == 0) {
+		} else if (stricmp("Racon", sKey) == 0) {
+		} else if (stricmp("DoubleLights", sKey) == 0) {
+		} else if (stricmp("DoubleLightsHorizontal", sKey) == 0) {
+		} else if (stricmp("FacilityPoint", sKey) == 0) {
+		} else {
+			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
+			return;
+		}
+	} else if (stricmp("DBX", sSection) == 0) {
 		/* Body */
 		bodyObject=1;
 		//undocumented
 		printf("--- Undocumented section found: %s\n", sSection);
 		return;
-	} else if (strcmp("FILE", sSection) == 0) {
+	} else if (stricmp("FILE", sSection) == 0) {
 		/* Body */
 		bodyObject=1;
-		if (strcmp("name", sKey) == 0) {
+		if (stricmp("name", sKey) == 0) {
 			//mandatory
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
@@ -430,7 +430,7 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 	strncpy(sTmp, sKey, 4);
 	sTmp[4]='\0';
 	if (bodyObject == 1) {
-		if (strcmp(sTmp, "Data") != 0) {
+		if (stricmp(sTmp, "Data") != 0) {
 printf("xxxx---process tag %s\n", sTmp);
 			addAttributeToObject(activeObject, sKey, sValue);
 printObject(activeObject, 999);
@@ -492,7 +492,7 @@ void readPolishFile(char *sFileName) {
 			printf("sLine==NULL\n"); //todo graphical error handling
 		} else {
 			printf("%d >> %s\n", iLineNo, sLine); //debug
-			//printf("strcmp:%d char:%d\n", strcmp("", sLine), sLine[0]); //debug
+			//printf("stricmp:%d char:%d\n", stricmp("", sLine), sLine[0]); //debug
 			
 			switch (sLine[0]) {
 				case '\r':
@@ -527,7 +527,7 @@ void readPolishFile(char *sFileName) {
 						char sTmp[iTmp+1];
 						sscanf(sLine, "[%3s", sTmp);
 						sTmp[3]='\0';
-						if (strcmp(sTmp, "END") != 0) {
+						if (stricmp(sTmp, "END") != 0) {
 							printf("%d: [%s] End of section expected, but not found\n", iLineNo, sSection);
 						} else {
 							//closing section

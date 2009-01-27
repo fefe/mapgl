@@ -301,12 +301,12 @@ objectList *findObjectList(char *sType) {
 	}
 	objectList *curOL;
 	curOL=rootObjectList;
-	if (strcmp(curOL->sType, sType) == 0) {
+	if (stricmp(curOL->sType, sType) == 0) {
 		return curOL;
 	}
 	while (curOL->next != NULL) {
 		curOL=curOL->next;
-		if (strcmp(curOL->sType, sType) == 0) {
+		if (stricmp(curOL->sType, sType) == 0) {
 			return curOL;
 		}
 	}
