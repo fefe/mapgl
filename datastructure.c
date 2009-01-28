@@ -139,7 +139,7 @@ Point
 
 */
 
-point *addPoint(point *curP, int x, int y, int z) {
+point *addPoint(point *curP, float x, float y, float z) {
 	//Adds a new point after point curP
 	point *newP;
 	newP=(point*)malloc(sizeof(point));
@@ -150,11 +150,13 @@ point *addPoint(point *curP, int x, int y, int z) {
 	if (curP != NULL) {
 		curP->next=newP;
 	}
+printf("adding point: %f %f %f\n", x, y, z);
 	newP->x=x;
 	newP->y=y;
 	newP->z=z;
 	newP->prev=curP;
 	newP->next=NULL;
+printf("added point: %f %f %f\n", newP->x, newP->y, newP->z);
 
 	//set border values
 	if (x<minx) minx=x;
@@ -166,7 +168,7 @@ point *addPoint(point *curP, int x, int y, int z) {
 	return newP;
 }
 
-point *addPointToObject(object *curO, int x, int y, int z) {
+point *addPointToObject(object *curO, float x, float y, float z) {
 	//Adds a new point to the object curO
 	if (curO == NULL) {
 		printf("Can not add new point to object NULL!\n");
@@ -374,7 +376,7 @@ void printPoint(point *curP, int counter) {
 		printf("\n");
 		return;
 	} else {
-		printf("%d:(%d, %d, %d) ", counter, curP->x, curP->y, curP->z);
+		printf("%d:(%f, %f, %f) ", counter, curP->x, curP->y, curP->z);
 	}
 	printPoint(curP->next, ++counter);
 }

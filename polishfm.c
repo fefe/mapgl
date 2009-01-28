@@ -576,7 +576,7 @@ void displayPolishMap(void) {
 				glNewList(dlPoi, GL_COMPILE);
 					glBegin(GL_POINT);
 						do {
-printf("vertex ");
+printf("vertex %f, %f, %f\n", curO->firstPoint->x, curO->firstPoint->y, curO->firstPoint->z);
 							glVertex3f(curO->firstPoint->x, curO->firstPoint->y, curO->firstPoint->z);
 							curO=curO->next;
 						} while (curO != NULL);

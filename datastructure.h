@@ -12,9 +12,11 @@ typedef struct pointCoord point;
 #define __datastructure_h_
 
 typedef struct point {
-	int x;
-	int y;
-	int z;
+	float x;
+	float y;
+	float z;
+	float lat;
+	float lon;
 	struct point *prev;
 	struct point *next;
 } point;
@@ -48,7 +50,7 @@ objectList *activeObjectList;
 object *activeObject;
 point *activePoint;
 
-int minx, maxx, miny, maxy, minz, maxz, centerx, centery, centerz;
+float minx, maxx, miny, maxy, minz, maxz, centerx, centery, centerz;
 int poi, dlPoi;
 
 /*
@@ -68,8 +70,8 @@ attribute *addAttributeToObject(object *curO, char *sKey, char *sValue);
 int numberOfAttributes(attribute *curA);
 void deleteAttributeChain(attribute *curA);
 
-point *addPoint(point *curP, int x, int y, int z);
-point *addPointToObject(object *curO, int x, int y, int z);
+point *addPoint(point *curP, float x, float y, float z);
+point *addPointToObject(object *curO, float x, float y, float z);
 int numberOfPoints(point *curP);
 void deletePointChain(point *curP);
 
