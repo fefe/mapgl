@@ -10,6 +10,7 @@ Source: http://cgpsmapper.com/manual.htm
 
 #include <GL/glut.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "stringhandling.h"
 #include "datastructure.h"
@@ -506,7 +507,7 @@ void readPolishFile(char *sFileName) {
 		strReplace(sLine, ' ', '_');
 		iLineNo++;
 
-		if (iLineNo > 485) {
+		if (iLineNo > 80) {
 			//read only the first few lines of the file
 			break; //debug
 		}
@@ -616,37 +617,66 @@ void displayPolishMap(void) {
 	point *curP;
 	curP=curO->firstPoint;
 
+	float r,g,b,i;
+
 	while (curOL != NULL) {
 		if (stricmp("POI", curOL->sType) == 0) {
 			poi=1;
 			dlPoi=glGenLists(1);
 			glNewList(dlPoi, GL_COMPILE);
 			glPointSize(3.0);
-			glBegin(GL_POINTS);
+debug("begin list poi");
+				glBegin(GL_POINTS);
 		} else if (stricmp("POLYGON", curOL->sType) == 0) {
 			polygon=1;
 			dlPolygon=glGenLists(1);
 			glNewList(dlPolygon, GL_COMPILE);
-			glBegin(GL_POLYGON);
+				glBegin(GL_POLYGON);
+debug("begin list polygon");
 		} else if (stricmp("POLYLINE", curOL->sType) == 0) {
 			polyline=1;
 			dlPolyline=glGenLists(1);
 			glNewList(dlPolyline, GL_COMPILE);
-			glBegin(GL_LINE_STRIP);
+				glBegin(GL_LINE_STRIP);
+debug("begin list polyline");
 		} else if (stricmp("other objects", curOL->sType) == 0) {
 		}
 		while (curO != NULL) {
+			if (stricmp("POI", curOL->sType) == 0) {
+//debug("\tbegin points");
+				//glBegin(GL_POINTS);
+			} else if (stricmp("POLYGON", curOL->sType) == 0) {
+//debug("\tbegin polygon");
+				//glBegin(GL_POLYGON);
+			} else if (stricmp("POLYLINE", curOL->sType) == 0) {
+//debug("\tbegin line strip");
+				//glBegin(GL_LINE_STRIP);
+			} else if (stricmp("other objects", curOL->sType) == 0) {
+			}
+			//todo remove random color
+			r=random();
+			while (r>1.0) r/=10.0;
+			g=random();
+			while (g>1.0) g/=10.0;
+			b=random();
+			while (b>1.0) b/=10.0;
+			printf("random=%f %f %f\n", r, g, b);
+			glColor3f(r, g, b);
+			glColor3f(1.0, 1.0, 0.0);
 			while (curP != NULL) {
 				//loop core
 				//todo -- setting type specific color
 				glVertex3f(curP->x, curP->y, curP->z);
-
+debug("\t\tvertex");
 				curP=curP->next;
 			}
 			curO=curO->next;
 			if (curO!=NULL) curP=curO->firstPoint;
+//debug("\tend");
+			//glEnd();
 		}
-		glEnd();
+debug("end list");
+			glEnd();
 		glEndList();
 		curOL=curOL->next;
 		if (curOL!=NULL) curO=curOL->firstObject;
