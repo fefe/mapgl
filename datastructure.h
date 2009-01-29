@@ -54,6 +54,8 @@ float minx, maxx, miny, maxy, minz, maxz, centerx, centery, centerz;
 float minlat, maxlat, minlon, maxlon, centerlat, centerlon;
 float centerlatRad, centerlonRad, centerlatSin, centerlatCos, centerlonSin, centerlonCos;
 int poi, dlPoi;
+int polygon, dlPolygon;
+int polyline, dlPolyline;
 
 /*
 	workptr = (psngr_rec*)malloc(sizeof(point));
@@ -83,6 +85,7 @@ int numberOfObjects(object *curO);
 void deleteObjectChain(object *curO);
 
 objectList *addObjectList(objectList *curOL, char *sType);
+objectList *getLastObjectList(void);
 objectList *getObjectList(char *sType);
 objectList *findObjectList(char *sType);
 int numberOfObjectsLists(objectList *curOL);

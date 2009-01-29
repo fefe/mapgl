@@ -98,7 +98,6 @@ attribute *addAttribute(attribute *curA, char *sKey, char *sValue) {
 	sTmp[strlen(sValue)]='\0';
 	newA->prev=curA;
 	newA->next=NULL;
-printf("debug: >>%s<< >>%s<<\n", sKey, sValue);
 	return newA;
 }
 
@@ -160,12 +159,10 @@ point *addPoint(point *curP, float lat, float lon) {
 	if (curP != NULL) {
 		curP->next=newP;
 	}
-printf("adding point: %f %f\n", lat, lon);
 	newP->lat=lat;
 	newP->lon=lon;
 	newP->prev=curP;
 	newP->next=NULL;
-printf("added point: %f %f\n", newP->lat, newP->lon);
 
 	//set border values
 	if (lat<minlat) minlat=lat;
@@ -289,6 +286,8 @@ Object list
 objectList *addObjectList(objectList *curOL, char *sType) {
 	//Adds an new object list of type after object list curOL
 	// 
+
+printf("------------adding objectlist %s\n", sType);
 	objectList *newOL;
 	newOL=(objectList*)malloc(sizeof(objectList));
 	if (newOL == NULL) {
@@ -307,6 +306,18 @@ objectList *addObjectList(objectList *curOL, char *sType) {
 	return newOL;
 }
 
+objectList *getLastObjectList(void) {
+	if (rootObjectList == NULL) {
+		return NULL;
+	}
+	objectList *curOL;
+	curOL=rootObjectList;
+	while (curOL->next != NULL) {
+		curOL=curOL->next;
+	}
+	return curOL;
+}
+
 objectList *getObjectList(char *sType) {
 	//Returns the object list for type, finds if exists or creates if does not exist
 	objectList *curOL;
@@ -315,7 +326,7 @@ objectList *getObjectList(char *sType) {
 		//already exists, returning it
 		return curOL;
 	}
-	curOL=addObjectList(curOL, sType);
+	curOL=addObjectList(getLastObjectList(), sType);
 	if (rootObjectList == NULL) {
 		//we had no root object list, this will be it
 		rootObjectList=curOL;

@@ -32,11 +32,14 @@ void Display(void)
 
 	glPushMatrix();
 
-	//axis
-
 	glRotatef(xRot, 1.0f, 0.0f, 0.0f);
 	glRotatef(yRot, 0.0f, 1.0f, 0.0f);
+	glScalef(zoom, zoom, -zoom);
 	glTranslatef(-centerx, -centery, -centerz);
+
+	// >> Modellezo programresz
+
+	//axis
 	glBegin(GL_LINES);
 		glColor3f(1.0, 0.0, 0.0);
 		glVertex3f(20.0, 0.0, 0.0);
@@ -48,12 +51,6 @@ void Display(void)
 		glVertex3f(0.0, 0.0, 20.0);
 		glVertex3f(0.0, 0.0, -20.0);
 	glEnd();
-	glTranslatef(centerx, centery, centerz);
-	glScalef(zoom, zoom, -zoom);
-	glTranslatef(-centerx, -centery, -centerz);
-
-	// >> Modellezo programresz
-
 
 	//center
 	glBegin(GL_LINES);
@@ -76,16 +73,22 @@ void Display(void)
 	glEnd();
 
 
-	glBegin(GL_POINTS);
-		glVertex3f(3.81, 0.0, 9.34);
-	glEnd();
-
 	if (poi) {
-printf("calling display list\n");
+debug("calling display list poi\n");
 		glColor3f(0.0,1.0,1.0);
 		glCallList(dlPoi);
 	}
-	// ...
+	if (polygon) {
+debug("calling display list polygon\n");
+		glColor3f(1.0,1.0,0.0);
+		glCallList(dlPolygon);
+	}
+	if (polyline) {
+debug("calling display list polyline\n");
+		glColor3f(1.0,0.0,1.0);
+		glCallList(dlPolyline);
+	}
+
 
 	// << Modellezo programresz
 
@@ -102,7 +105,6 @@ void SetupRC()
 	// Black background
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
 	glEnable(GL_DEPTH_TEST);
-	glPointSize(5.0);
 }
 
 void SpecialKeys(int key, int x, int y)

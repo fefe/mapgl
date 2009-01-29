@@ -18,7 +18,7 @@ Source: http://cgpsmapper.com/manual.htm
 
 void processSection (char *sSection) {
 	int iTmp, bodyObject=0;
-printf("///processing section\n");
+
 	/* Body */
 	if (stricmp("POI", sSection) == 0 || stricmp("RGN10", sSection) == 0 || stricmp("RGN20", sSection) == 0) {
 		bodyObject=1;
@@ -53,10 +53,12 @@ printf("///processing section\n");
 	//filtering done, valid sections were found
 	if (bodyObject == 1) {
 		if (activeObjectList == NULL || stricmp(activeObjectList->sType, sSection) != 0) {
+debug("creating objectList");
 			activeObjectList=getObjectList(sSection);
 		}
-printf("^^^^^adding object to objectlist");
+debug("adding object");
 		activeObject=addObjectToObjectList(activeObjectList);
+printObject(activeObject, 9999);
 	}
 }
 
@@ -239,7 +241,16 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		} else if (stricmp("City", sKey) == 0) {
 		} else if (stricmp("Label", sKey) == 0) {
 		} else if (stricmp("EndLevel", sKey) == 0) {
+		} else if (stricmp("Data0", sKey) == 0) {
 		} else if (stricmp("Data1", sKey) == 0) {
+		} else if (stricmp("Data2", sKey) == 0) {
+		} else if (stricmp("Data3", sKey) == 0) {
+		} else if (stricmp("Data4", sKey) == 0) {
+		} else if (stricmp("Data5", sKey) == 0) {
+		} else if (stricmp("Data6", sKey) == 0) {
+		} else if (stricmp("Data7", sKey) == 0) {
+		} else if (stricmp("Data8", sKey) == 0) {
+		} else if (stricmp("Data9", sKey) == 0) {
 			//mandatory
 		} else if (stricmp("Data#", sKey) == 0) {
 			//mandatory
@@ -267,7 +278,16 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		} else if (stricmp("Label", sKey) == 0) {
 		} else if (stricmp("EndLevel", sKey) == 0) {
 		} else if (stricmp("Background", sKey) == 0) {
+		} else if (stricmp("Data0", sKey) == 0) {
 		} else if (stricmp("Data1", sKey) == 0) {
+		} else if (stricmp("Data2", sKey) == 0) {
+		} else if (stricmp("Data3", sKey) == 0) {
+		} else if (stricmp("Data4", sKey) == 0) {
+		} else if (stricmp("Data5", sKey) == 0) {
+		} else if (stricmp("Data6", sKey) == 0) {
+		} else if (stricmp("Data7", sKey) == 0) {
+		} else if (stricmp("Data8", sKey) == 0) {
+		} else if (stricmp("Data9", sKey) == 0) {
 			//mandatory
 		} else if (stricmp("Data#", sKey) == 0) {
 			//mandatory
@@ -285,7 +305,16 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		} else if (stricmp("Label", sKey) == 0) {
 		} else if (stricmp("Label2", sKey) == 0) {
 		} else if (stricmp("EndLevel", sKey) == 0) {
+		} else if (stricmp("Data0", sKey) == 0) {
 		} else if (stricmp("Data1", sKey) == 0) {
+		} else if (stricmp("Data2", sKey) == 0) {
+		} else if (stricmp("Data3", sKey) == 0) {
+		} else if (stricmp("Data4", sKey) == 0) {
+		} else if (stricmp("Data5", sKey) == 0) {
+		} else if (stricmp("Data6", sKey) == 0) {
+		} else if (stricmp("Data7", sKey) == 0) {
+		} else if (stricmp("Data8", sKey) == 0) {
+		} else if (stricmp("Data9", sKey) == 0) {
 			//mandatory
 		} else if (stricmp("Data#", sKey) == 0) {
 			//mandatory
@@ -433,31 +462,21 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 	sTmp[4]='\0';
 	if (bodyObject == 1) {
 		if (stricmp(sTmp, "Data") != 0) {
-printf("xxxx---process tag %s\n", sTmp);
 			addAttributeToObject(activeObject, sKey, sValue);
-printObject(activeObject, 999);
-printf("xxxx---process tag ... done\n");
 		} else {
 			processData(sValue);
-printObject(activeObject, 999);
-printf("xxxx---process tag ... data ... done\n");
 		}
 	}
 }
 
 void processData(char *sData) {
-printf("xxxx---process data start .................................\n");
 	int iTmp;
 	char *sToken;
 	float lat, lon;
 	sToken=strtok( sData, "()");
 	while (sToken != NULL) {
-//todo / tokenizalas ketszer olvassa be az elso darabot, megnezni miert
-printf("sdata=%s\n", sData);
 		iTmp=sscanf(sData, "(%f,%f", &lat, &lon);
-printf("itmp=%d\n", iTmp);
 		if (iTmp == 2) {
-printf("xxxx---process data %f %f\n", lat, lon);
 			addPointToObject(activeObject, lat, lon); //todo - height information is is zero 
 		}
 		sToken=strtok( NULL, "()");
@@ -486,10 +505,12 @@ void readPolishFile(char *sFileName) {
 		sLine = sGetLine(pFile);
 		strReplace(sLine, ' ', '_');
 		iLineNo++;
-		if (iLineNo > 100) {
+
+		if (iLineNo > 485) {
 			//read only the first few lines of the file
 			break; //debug
 		}
+
 		if (sLine == NULL) {
 			printf("sLine==NULL\n"); //todo graphical error handling
 		} else {
@@ -518,7 +539,7 @@ void readPolishFile(char *sFileName) {
 							strncpy(sSection, sTmp, SECTIONWIDTH);
 							//sSection[SECTIONWIDTH]='\0'; //strncpy puts terminating null
 							//printf("%d: [%s]\n", iLineNo, sTmp); //debug
-							printf("%d: section found:[%s] found=%d\n", iLineNo, sSection, iTmp);
+printf("%d: section found:[%s] found=%d\n", iLineNo, sSection, iTmp);
 							processSection(sSection);
 						} else {
 							printf("%d: section not found: length=%d\n", iLineNo, iTmp);
@@ -533,7 +554,8 @@ void readPolishFile(char *sFileName) {
 							printf("%d: [%s] End of section expected, but not found\n", iLineNo, sSection);
 						} else {
 							//closing section
-							printf("%d: [%s] End of section\n", iLineNo, sSection);
+printObject(activeObject, 99999);
+printf("%d: [%s] End of section\n", iLineNo, sSection);
 							sSection[0]='\0';
 						}
 					}
@@ -547,7 +569,7 @@ void readPolishFile(char *sFileName) {
 					//todo sorvegrol leszedni a nem lathato szemetet, igy jo?
 					strReplace(sValue, '\n', '\0');
 					strReplace(sValue, '\r', '\0');
-					printf("%d: sec:%s key:%s value:%s\n", iLineNo, sSection, sKey, sValue);
+					//printf("%d: sec:%s key:%s value:%s\n", iLineNo, sSection, sKey, sValue);
 					processTag(sSection, sKey, sValue);
 				}
 			}
@@ -555,6 +577,30 @@ void readPolishFile(char *sFileName) {
 		free(sLine);
 	}
 } 
+
+/*
+//sample loop
+	objectList *curOL;
+	curOL=rootObjectList;
+	object *curO;
+	curO=curOL->firstObject;
+	point *curP;
+	curP=curO->firstPoint;
+	while (curOL != NULL) {
+		while (curO != NULL) {
+			while (curP != NULL) {
+				//loop core
+
+				curP=curP->next;
+			}
+			curO=curO->next;
+			if (curO!=NULL) curP=curO->firstPoint;
+		}
+		curOL=curOL->next;
+		if (curOL!=NULL) curO=curOL->firstObject;
+		if (curO!=NULL) curP=curO->firstPoint;
+	} 
+*/
 
 void displayPolishMap(void) {
 	//display the objects stored in the data structure
@@ -567,30 +613,46 @@ void displayPolishMap(void) {
 	curOL=rootObjectList;
 	object *curO;
 	curO=curOL->firstObject;
-	do {
+	point *curP;
+	curP=curO->firstPoint;
+
+	while (curOL != NULL) {
 		if (stricmp("POI", curOL->sType) == 0) {
-			//todo - optimize with separate display lists
-			if (curO != NULL) {
-				//if we have an object, create a display list for that type
-				poi=1;
-				dlPoi=glGenLists(1);
-				glNewList(dlPoi, GL_COMPILE);
-					glPointSize(5.0);
-					glBegin(GL_POINT);
-						do {
-printf("vertex %f, %f, %f\n", curO->firstPoint->x, curO->firstPoint->y, curO->firstPoint->z);
-							glVertex3f(curO->firstPoint->x, curO->firstPoint->y, curO->firstPoint->z);
-							curO=curO->next;
-						} while (curO != NULL);
-					glEnd();
-				glEndList();
-			}
-		} else if (stricmp("todo", curOL->sType) == 0) {
-			//todo the other object types
+			poi=1;
+			dlPoi=glGenLists(1);
+			glNewList(dlPoi, GL_COMPILE);
+			glPointSize(3.0);
+			glBegin(GL_POINTS);
+		} else if (stricmp("POLYGON", curOL->sType) == 0) {
+			polygon=1;
+			dlPolygon=glGenLists(1);
+			glNewList(dlPolygon, GL_COMPILE);
+			glBegin(GL_POLYGON);
+		} else if (stricmp("POLYLINE", curOL->sType) == 0) {
+			polyline=1;
+			dlPolyline=glGenLists(1);
+			glNewList(dlPolyline, GL_COMPILE);
+			glBegin(GL_LINE_STRIP);
+		} else if (stricmp("other objects", curOL->sType) == 0) {
 		}
+		while (curO != NULL) {
+			while (curP != NULL) {
+				//loop core
+				//todo -- setting type specific color
+				glVertex3f(curP->x, curP->y, curP->z);
+
+				curP=curP->next;
+			}
+			curO=curO->next;
+			if (curO!=NULL) curP=curO->firstPoint;
+		}
+		glEnd();
+		glEndList();
 		curOL=curOL->next;
-	} while (curOL != NULL);
-	
+		if (curOL!=NULL) curO=curOL->firstObject;
+		if (curO!=NULL) curP=curO->firstPoint;
+	} 
+
 	
 }
 
@@ -621,7 +683,9 @@ printf("centerlat=%f centerlon=%f\n", centerlat, centerlon);
 	point *curP;
 	curP=curO->firstPoint;
 	while (curOL != NULL) {
+debug("whule1 start");
 		while (curO != NULL) {
+debug("whule2 start");
 			while (curP != NULL) {
 				//loop core
 				//convertCoordinateToDistance(curP->lat, curP->lon, centerlat, centerlon, &(curP->x), &(curP->z)); //the other format is more obvious
@@ -637,14 +701,15 @@ printf("centerlat=%f centerlon=%f\n", centerlat, centerlon);
 				if (curP->z>maxz) maxz=curP->z; 
 
 				curP=curP->next;
-debug("loop core end");
 			}
 			curO=curO->next;
 			if (curO!=NULL) curP=curO->firstPoint;
+debug("whule2 end");
 		}
 		curOL=curOL->next;
 		if (curOL!=NULL) curO=curOL->firstObject;
 		if (curO!=NULL) curP=curO->firstPoint;
+debug("whule1 end");
 	} 
 
 	centerx=(maxx+minx)/2.0;
