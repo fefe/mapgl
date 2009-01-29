@@ -575,6 +575,7 @@ void displayPolishMap(void) {
 				poi=1;
 				dlPoi=glGenLists(1);
 				glNewList(dlPoi, GL_COMPILE);
+					glPointSize(5.0);
 					glBegin(GL_POINT);
 						do {
 printf("vertex %f, %f, %f\n", curO->firstPoint->x, curO->firstPoint->y, curO->firstPoint->z);
@@ -613,8 +614,6 @@ printf("maxlat=%f maxlon=%f\n", maxlat, maxlon);
 printf("minlat=%f minlon=%f\n", minlat, minlon);
 printf("centerlat=%f centerlon=%f\n", centerlat, centerlon);
 
-debug("compute coordinates");
-
 	objectList *curOL;
 	curOL=rootObjectList;
 	object *curO;
@@ -629,14 +628,16 @@ debug("compute coordinates");
 				curP->x=convertCoordinateToDistanceX(curP->lon);
 				curP->y=0.0; //todo - correct height for every point
 				curP->z=convertCoordinateToDistanceZ(curP->lat);
-				curP=curP->next;
 				//set border values
-				if (x<minx) minx=x; 
-				if (x>maxx) maxx=x; 
-				if (y<miny) miny=y; 
-				if (y>maxy) maxy=y; 
-				if (z<minz) minz=z; 
-				if (z>maxz) maxz=z; 
+				if (curP->x<minx) minx=curP->x; 
+				if (curP->x>maxx) maxx=curP->x; 
+				if (curP->y<miny) miny=curP->y; 
+				if (curP->y>maxy) maxy=curP->y; 
+				if (curP->z<minz) minz=curP->z; 
+				if (curP->z>maxz) maxz=curP->z; 
+
+				curP=curP->next;
+debug("loop core end");
 			}
 			curO=curO->next;
 			if (curO!=NULL) curP=curO->firstPoint;
@@ -645,5 +646,14 @@ debug("compute coordinates");
 		if (curOL!=NULL) curO=curOL->firstObject;
 		if (curO!=NULL) curP=curO->firstPoint;
 	} 
+
+	centerx=(maxx+minx)/2.0;
+	centery=(maxy+miny)/2.0;
+	centerz=(maxz+minz)/2.0;
+debug("itt");
+printf("maxx=%f maxy=%f maxz=%f\n", maxx, maxy, maxz);
+printf("minx=%f miny=%f minz=%f\n", minx, miny, minz);
+printf("centerx=%f centery=%f centerz=%f\n", centerx, centery, centerz);
+
 }
 

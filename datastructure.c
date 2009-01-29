@@ -48,8 +48,10 @@ void initDataStructure(void) {
 	//todo - check to make sure default values are correct
 	minx=40000.0; //out of range for sure [36000km]
 	maxx=-40000.0;
-	miny=-11000.0; //depth in meters
-	maxy=11000.0; //height in meters
+	//miny=-11.0; //depth in km
+	//maxy=11.0; //height in km
+	miny=0.0; //depth in km
+	maxy=0.0; //height in km
 	minz=40000.0;
 	maxz=-40000.0;
 	centerx=0.0;

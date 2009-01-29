@@ -51,4 +51,14 @@ void debug(char *info) {
 #endif /* DEBUG */
 }
 
+void debugi(char *info, int i) {
+#ifdef DEBUG
+	printf("%s%d", info, i);
+#endif /* DEBUG */
+}
 
+void debugf(char *info, float f) {
+#ifdef DEBUG
+	printf("%s%f", info, f);
+#endif /* DEBUG */
+}

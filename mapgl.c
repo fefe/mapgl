@@ -13,6 +13,8 @@ static int IdlePrint = 0;
 
 GLfloat xRot = 0.0f;
 GLfloat yRot = 0.0f;
+GLfloat zoom = 1.0f; 
+GLfloat nRange = 0.0f; 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,13 +31,12 @@ void Display(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glPushMatrix();
-	glTranslatef(centerx, centery, centerz);
+
+	//axis
+
 	glRotatef(xRot, 1.0f, 0.0f, 0.0f);
 	glRotatef(yRot, 0.0f, 1.0f, 0.0f);
-	glTranslatef(-1*centerx, -1*centery, -1*centerz);
-
-	// >> Modellezo programresz
-
+	glTranslatef(-centerx, -centery, -centerz);
 	glBegin(GL_LINES);
 		glColor3f(1.0, 0.0, 0.0);
 		glVertex3f(20.0, 0.0, 0.0);
@@ -46,18 +47,42 @@ void Display(void)
 		glColor3f(0.0, 0.0, 1.0);
 		glVertex3f(0.0, 0.0, 20.0);
 		glVertex3f(0.0, 0.0, -20.0);
+	glEnd();
+	glTranslatef(centerx, centery, centerz);
+	glScalef(zoom, zoom, -zoom);
+	glTranslatef(-centerx, -centery, -centerz);
+
+	// >> Modellezo programresz
 
 
-		glColor3f(1.0, 0.0, 0.0);
-		glVertex3f(0.0, 0.0, 0.0);
-		glVertex3f(minx, 0.0, minz);
-		glVertex3f(0.0, 0.0, 0.0);
-		glVertex3f(maxx, 0.0, maxz);
+	//center
+	glBegin(GL_LINES);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex3f(centerx+1.0, centery, centerz);
+		glVertex3f(centerx-1.0, centery, centerz);
+		glVertex3f(centerx, centery+1.0, centerz);
+		glVertex3f(centerx, centery-1.0, centerz);
+		glVertex3f(centerx, 0.0, centerz+1.0);
+		glVertex3f(centerx, 0.0, centerz-1.0);
+	glEnd();
+
+	//borders
+	glBegin(GL_LINE_LOOP);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex3f(minx, miny, minz);
+		glVertex3f(maxx, miny, minz);
+		glVertex3f(maxx, miny, maxz);
+		glVertex3f(minx, miny, maxz);
+	glEnd();
+
+
+	glBegin(GL_POINTS);
+		glVertex3f(3.81, 0.0, 9.34);
 	glEnd();
 
 	if (poi) {
 printf("calling display list\n");
-		glColor3f(1,1,1);
+		glColor3f(0.0,1.0,1.0);
 		glCallList(dlPoi);
 	}
 	// ...
@@ -140,6 +165,15 @@ void Keyboard(unsigned char key, int x, int y)
 	printf("\n");
 	fflush(stdout);
 
+	switch (key) {
+		case '+':
+			zoom*=1.1f;
+			break; 
+		case '-':
+			zoom/=1.1f;
+			break; 
+	}
+
 	glutPostRedisplay();
 }
 
@@ -161,8 +195,17 @@ void Idle()
 
 void ChangeSizeOrtho(int w, int h)
 {
-	GLfloat nRange = 59.0f;
-	
+
+	//made global variable, used at Display funct for translate
+	//GLfloat nRange=0.0;
+	nRange=0.0;
+	if (abs(minx)>nRange) nRange=minx; 
+	if (abs(miny)>nRange) nRange=miny; 
+	if (abs(minz)>nRange) nRange=minz; 
+	if (abs(maxx)>nRange) nRange=maxx; 
+	if (abs(maxy)>nRange) nRange=maxy; 
+	if (abs(maxz)>nRange) nRange=maxz;
+
 	// Prevent a divide by zero
 	if(h == 0)
 		h = 1;
@@ -178,10 +221,6 @@ printf("koordinata rendszer: x(%f, %f) y(%f, %f) z(%f, %f)\n", minx, maxx, miny,
 
 	// Establish clipping volume (left, right, bottom, top, near, far)
 
-	centerx=(maxx+minx)/2.0;
-	centery=(maxy+miny)/2.0;
-	centerz=(maxz+minz)/2.0;
-
 /*
 	if (w <= h) 
 		glOrtho(minx-1.0, maxx+1.0, (minx-1.0)*h/w, (maxx+1.0)*h/w, minz-1.0, maxz+1.0);
@@ -195,18 +234,19 @@ printf("koordinata rendszer: x(%f, %f) y(%f, %f) z(%f, %f)\n", minx, maxx, miny,
 		glOrtho(minx*w/h, maxx*w/h, miny, maxy, minz, maxz);
 */
 
+/*
 	if (w <= h) 
 		glOrtho(47.0, 48.0, -4.0*h/w, 4.0*h/w, -25, -10);
 	else 
 		glOrtho(47.0*w/h, 48.0*w/h, -4.0, 4.0, -25, -10);
+*/
 
 
-/*
 	if (w <= h) 
 		glOrtho(-nRange, nRange, -nRange*h/w, nRange*h/w, -nRange, nRange);
 	else 
 		glOrtho(-nRange*w/h, nRange*w/h, -nRange, nRange, -nRange, nRange);
-*/
+
 	
 	// Reset Model view matrix stack
 	glMatrixMode(GL_MODELVIEW);
