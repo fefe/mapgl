@@ -43,3 +43,12 @@ char *sGetLine (FILE *pFile) {
 	return result;
 }
 
+#define DEBUG 1
+
+void debug(char *info) {
+#ifdef DEBUG
+	printf("<<<debug>>> %s\n", info);
+#endif /* DEBUG */
+}
+
+

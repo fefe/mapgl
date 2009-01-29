@@ -20,6 +20,7 @@ typedef struct pointCoord point;
 
 #include <stdio.h>
 #include <string.h>
+#include "stringhandling.h" 
 #include "datastructure.h" 
 
 /*
@@ -45,15 +46,22 @@ void initDataStructure(void) {
 	activeObjectList=NULL;
 	activeObject=NULL;
 	//todo - check to make sure default values are correct
-	minx=400;
-	maxx=-400;
-	miny=-11000; //depth in meters
-	maxy=11000; //height in meters
-	minz=400;
-	maxz=-400;
-	centerx=0;
-	centery=0;
-	centerz=0;
+	minx=40000.0; //out of range for sure [36000km]
+	maxx=-40000.0;
+	miny=-11000.0; //depth in meters
+	maxy=11000.0; //height in meters
+	minz=40000.0;
+	maxz=-40000.0;
+	centerx=0.0;
+	centery=0.0;
+	centerz=0.0;
+
+	minlat=400.0; //out of range for sure [-180;180]
+	maxlat=-400.0;
+	minlon=400.0;
+	maxlon=-400.0;
+	centerlat=0.0;
+	centerlon=0.0;
 
 	poi=0;
 }
@@ -139,7 +147,7 @@ Point
 
 */
 
-point *addPoint(point *curP, float x, float y, float z) {
+point *addPoint(point *curP, float lat, float lon) {
 	//Adds a new point after point curP
 	point *newP;
 	newP=(point*)malloc(sizeof(point));
@@ -150,25 +158,22 @@ point *addPoint(point *curP, float x, float y, float z) {
 	if (curP != NULL) {
 		curP->next=newP;
 	}
-printf("adding point: %f %f %f\n", x, y, z);
-	newP->x=x;
-	newP->y=y;
-	newP->z=z;
+printf("adding point: %f %f\n", lat, lon);
+	newP->lat=lat;
+	newP->lon=lon;
 	newP->prev=curP;
 	newP->next=NULL;
-printf("added point: %f %f %f\n", newP->x, newP->y, newP->z);
+printf("added point: %f %f\n", newP->lat, newP->lon);
 
 	//set border values
-	if (x<minx) minx=x;
-	if (y<miny) miny=y;
-	if (z<minz) minz=z;
-	if (x>maxx) maxx=x;
-	if (y>maxy) maxy=y;
-	if (z>maxz) maxz=z;
+	if (lat<minlat) minlat=lat;
+	if (lon<minlon) minlon=lon;
+	if (lat>maxlat) maxlat=lat;
+	if (lon>maxlon) maxlon=lon;
 	return newP;
 }
 
-point *addPointToObject(object *curO, float x, float y, float z) {
+point *addPointToObject(object *curO, float lat, float lon) {
 	//Adds a new point to the object curO
 	if (curO == NULL) {
 		printf("Can not add new point to object NULL!\n");
@@ -176,10 +181,10 @@ point *addPointToObject(object *curO, float x, float y, float z) {
 	}
 	point *newP;
 	if (curO->firstPoint == NULL) {
-		newP=addPoint(NULL, x, y, z);
+		newP=addPoint(NULL, lat, lon);
 		curO->firstPoint=newP;
 	} else {
-		newP=addPoint(curO->lastPoint, x, y, z);
+		newP=addPoint(curO->lastPoint, lat, lon);
 	}
 	curO->lastPoint=newP;
 	return newP;
@@ -376,7 +381,7 @@ void printPoint(point *curP, int counter) {
 		printf("\n");
 		return;
 	} else {
-		printf("%d:(%f, %f, %f) ", counter, curP->x, curP->y, curP->z);
+		printf("%d:([%f, %f] %f, %f, %f) ", counter, curP->lat, curP->lon, curP->x, curP->y, curP->z);
 	}
 	printPoint(curP->next, ++counter);
 }

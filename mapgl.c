@@ -6,7 +6,7 @@
 #include <string.h>
 
 // Define a constant for the value of PI
-#define GL_PI 3.1415f
+#define GL_PI 3.1415926536f
 
 static int MenuID, IdleMenu;
 static int IdlePrint = 0;
@@ -281,7 +281,8 @@ int main(int argc, char* argv[])
 {
 	// >> Inicializalas
 
-	readPolishFile("sample_map.mp");
+	readPolishFile("sample_map.mp"); //read the map file to datastructure objects
+	computeCoordinates(); //compute world coordinates from lon/lat data
 	printAll();
 
 	glutInit(&argc, argv);

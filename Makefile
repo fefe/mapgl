@@ -1,8 +1,8 @@
 #	Makefile for MapGL
 
 APPS = mapgl
-OBJ = $(APPS).o datastructure.o stringhandling.o polishfm.o
-SRC = $(APPS).c datastructure.c stringhandling.c polishfm.c
+OBJ = $(APPS).o datastructure.o stringhandling.o polishfm.o trigonometry.o
+SRC = $(APPS).c datastructure.c stringhandling.c polishfm.c trigonometry.c
 
 CFLAGS = $(C_OPTS) -I/usr/include
 LIBS = -L/usr/X11R6/lib -lX11 -lXi -lXmu -lglut -lGL -lGLU -lm -lpthread
@@ -10,8 +10,9 @@ LIBS = -L/usr/X11R6/lib -lX11 -lXi -lXmu -lglut -lGL -lGLU -lm -lpthread
 application:$(APPS)
 
 stringhandling.o: stringhandling.c stringhandling.h
-datastructure.o: datastructure.c datastructure.h
-polishfm.o: polishfm.c polishfm.h datastructure.h stringhandling.h
+datastructure.o: datastructure.c datastructure.h trigonometry.h stringhandling.h
+polishfm.o: polishfm.c polishfm.h datastructure.h stringhandling.h trigonometry.h
+trigonometry.o: trigonometry.c trigonometry.h datastructure.h stringhandling.h
 
 clean:
 	rm -f $(APPS) *.raw *.o core a.out

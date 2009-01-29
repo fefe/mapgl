@@ -51,6 +51,8 @@ object *activeObject;
 point *activePoint;
 
 float minx, maxx, miny, maxy, minz, maxz, centerx, centery, centerz;
+float minlat, maxlat, minlon, maxlon, centerlat, centerlon;
+float centerlatRad, centerlonRad, centerlatSin, centerlatCos, centerlonSin, centerlonCos;
 int poi, dlPoi;
 
 /*
@@ -70,8 +72,8 @@ attribute *addAttributeToObject(object *curO, char *sKey, char *sValue);
 int numberOfAttributes(attribute *curA);
 void deleteAttributeChain(attribute *curA);
 
-point *addPoint(point *curP, float x, float y, float z);
-point *addPointToObject(object *curO, float x, float y, float z);
+point *addPoint(point *curP, float lat, float lon);
+point *addPointToObject(object *curO, float lat, float lon);
 int numberOfPoints(point *curP);
 void deletePointChain(point *curP);
 

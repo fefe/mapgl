@@ -13,6 +13,7 @@ Source: http://cgpsmapper.com/manual.htm
 #include <string.h>
 #include "stringhandling.h"
 #include "datastructure.h"
+#include "trigonometry.h"
 #include "polishfm.h"
 
 void processSection (char *sSection) {
@@ -448,16 +449,16 @@ void processData(char *sData) {
 printf("xxxx---process data start .................................\n");
 	int iTmp;
 	char *sToken;
-	float x, z;
+	float lat, lon;
 	sToken=strtok( sData, "()");
 	while (sToken != NULL) {
 //todo / tokenizalas ketszer olvassa be az elso darabot, megnezni miert
 printf("sdata=%s\n", sData);
-		iTmp=sscanf(sData, "(%f,%f", &x, &z);
+		iTmp=sscanf(sData, "(%f,%f", &lat, &lon);
 printf("itmp=%d\n", iTmp);
 		if (iTmp == 2) {
-printf("xxxx---process data %f %f\n", x, z);
-			addPointToObject(activeObject, x, 0.0, z); //todo - height information is is zero 
+printf("xxxx---process data %f %f\n", lat, lon);
+			addPointToObject(activeObject, lat, lon); //todo - height information is is zero 
 		}
 		sToken=strtok( NULL, "()");
 	}
@@ -564,11 +565,11 @@ void displayPolishMap(void) {
 
 	objectList *curOL;
 	curOL=rootObjectList;
+	object *curO;
+	curO=curOL->firstObject;
 	do {
 		if (stricmp("POI", curOL->sType) == 0) {
 			//todo - optimize with separate display lists
-			object *curO;
-			curO=curOL->firstObject;
 			if (curO != NULL) {
 				//if we have an object, create a display list for that type
 				poi=1;
@@ -591,3 +592,58 @@ printf("vertex %f, %f, %f\n", curO->firstPoint->x, curO->firstPoint->y, curO->fi
 	
 	
 }
+
+void computeCoordinates(void) {
+	//update coordinates in every point object
+	if (rootObjectList == NULL) {
+		printf("Root object list is NULL, no coordinates to compute!\n");
+		return;
+	}
+
+	centerlat=(maxlat+minlat)/2.0;
+	centerlon=(maxlon+minlon)/2.0;
+	centerlatRad=toRadian(centerlat);
+	centerlonRad=toRadian(centerlon);
+	centerlatSin=sin(centerlatRad);
+	centerlatCos=cos(centerlatRad);
+	centerlonSin=sin(centerlonRad);
+	centerlonCos=cos(centerlonRad);
+
+printf("maxlat=%f maxlon=%f\n", maxlat, maxlon);
+printf("minlat=%f minlon=%f\n", minlat, minlon);
+printf("centerlat=%f centerlon=%f\n", centerlat, centerlon);
+
+debug("compute coordinates");
+
+	objectList *curOL;
+	curOL=rootObjectList;
+	object *curO;
+	curO=curOL->firstObject;
+	point *curP;
+	curP=curO->firstPoint;
+	while (curOL != NULL) {
+		while (curO != NULL) {
+			while (curP != NULL) {
+				//loop core
+				//convertCoordinateToDistance(curP->lat, curP->lon, centerlat, centerlon, &(curP->x), &(curP->z)); //the other format is more obvious
+				curP->x=convertCoordinateToDistanceX(curP->lon);
+				curP->y=0.0; //todo - correct height for every point
+				curP->z=convertCoordinateToDistanceZ(curP->lat);
+				curP=curP->next;
+				//set border values
+				if (x<minx) minx=x; 
+				if (x>maxx) maxx=x; 
+				if (y<miny) miny=y; 
+				if (y>maxy) maxy=y; 
+				if (z<minz) minz=z; 
+				if (z>maxz) maxz=z; 
+			}
+			curO=curO->next;
+			if (curO!=NULL) curP=curO->firstPoint;
+		}
+		curOL=curOL->next;
+		if (curOL!=NULL) curO=curOL->firstObject;
+		if (curO!=NULL) curP=curO->firstPoint;
+	} 
+}
+
