@@ -501,17 +501,24 @@ void readPolishFile(char *sFileName) {
 	char sTag[10]; //todo check all tag for length
 	sTag[0]='\0';
 	int iLineNo=0;
-	while (!feof(pFile)) {
-		char *sLine=NULL;
-		sLine = sGetLine(pFile);
+	char *sLine=NULL;
+	//while (!feof(pFile)) {
+	while (sLine = sGetLine(pFile)) {
+//		char *sLine=NULL;
+debug("while start");
+		//sLine = sGetLine(pFile);
+printf(">%s<", sLine);
+debug("while start 2");
 		strReplace(sLine, ' ', '_');
+debug("while start 3");
 		iLineNo++;
-
+debug("while start 4");
+/*
 		if (iLineNo > 80) {
 			//read only the first few lines of the file
 			break; //debug
 		}
-
+*/
 		if (sLine == NULL) {
 			printf("sLine==NULL\n"); //todo graphical error handling
 		} else {
@@ -624,33 +631,37 @@ void displayPolishMap(void) {
 			poi=1;
 			dlPoi=glGenLists(1);
 			glNewList(dlPoi, GL_COMPILE);
-			glPointSize(3.0);
+			glPointSize(6.0);
 debug("begin list poi");
-				glBegin(GL_POINTS);
+				//glBegin(GL_POINTS);
 		} else if (stricmp("POLYGON", curOL->sType) == 0) {
 			polygon=1;
 			dlPolygon=glGenLists(1);
 			glNewList(dlPolygon, GL_COMPILE);
-				glBegin(GL_POLYGON);
+				//glBegin(GL_POLYGON);
 debug("begin list polygon");
 		} else if (stricmp("POLYLINE", curOL->sType) == 0) {
 			polyline=1;
 			dlPolyline=glGenLists(1);
 			glNewList(dlPolyline, GL_COMPILE);
-				glBegin(GL_LINE_STRIP);
+				//glBegin(GL_LINE_STRIP);
 debug("begin list polyline");
 		} else if (stricmp("other objects", curOL->sType) == 0) {
 		}
 		while (curO != NULL) {
 			if (stricmp("POI", curOL->sType) == 0) {
-//debug("\tbegin points");
-				//glBegin(GL_POINTS);
+debug("\tbegin points");
+				glBegin(GL_POINTS);
+				glColor3f(1.0, 0.0, 1.0);
 			} else if (stricmp("POLYGON", curOL->sType) == 0) {
-//debug("\tbegin polygon");
+debug("\tbegin polygon");
+				glBegin(GL_POINTS);
 				//glBegin(GL_POLYGON);
+				glColor3f(0.0, 1.0, 1.0);
 			} else if (stricmp("POLYLINE", curOL->sType) == 0) {
-//debug("\tbegin line strip");
-				//glBegin(GL_LINE_STRIP);
+debug("\tbegin line strip");
+				glBegin(GL_LINE_STRIP);
+				glColor3f(0.0, 1.0, 0.0);
 			} else if (stricmp("other objects", curOL->sType) == 0) {
 			}
 			//todo remove random color
@@ -661,8 +672,8 @@ debug("begin list polyline");
 			b=random();
 			while (b>1.0) b/=10.0;
 			printf("random=%f %f %f\n", r, g, b);
-			glColor3f(r, g, b);
-			glColor3f(1.0, 1.0, 0.0);
+			//glColor3f(r, g, b);
+			//glColor3f(1.0, 1.0, 0.0);
 			while (curP != NULL) {
 				//loop core
 				//todo -- setting type specific color
@@ -672,11 +683,11 @@ debug("\t\tvertex");
 			}
 			curO=curO->next;
 			if (curO!=NULL) curP=curO->firstPoint;
-//debug("\tend");
-			//glEnd();
+debug("\tend");
+			glEnd();
 		}
 debug("end list");
-			glEnd();
+			//glEnd();
 		glEndList();
 		curOL=curOL->next;
 		if (curOL!=NULL) curO=curOL->firstObject;
@@ -722,6 +733,7 @@ debug("whule2 start");
 				curP->x=convertCoordinateToDistanceX(curP->lon);
 				curP->y=0.0; //todo - correct height for every point
 				curP->z=convertCoordinateToDistanceZ(curP->lat);
+printPoint(curP, 999);
 				//set border values
 				if (curP->x<minx) minx=curP->x; 
 				if (curP->x>maxx) maxx=curP->x; 

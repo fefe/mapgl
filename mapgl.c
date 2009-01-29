@@ -72,6 +72,23 @@ void Display(void)
 		glVertex3f(minx, miny, maxz);
 	glEnd();
 
+	//net
+	int i;
+	glBegin(GL_LINES);
+		for (i=0; i<20; i++) {
+			if (i%5 == 0) {
+				glColor3f(0.5, 0.0, 0.0);
+			} else {
+				glColor3f(0.5, 0.5, 0.5);
+			}
+			glVertex3f(0.0, 0.0, i);
+			glVertex3f(20.0, 0.0, i);
+			glVertex3f(i, 0.0, 0.0);
+			glVertex3f(i, 0.0, 20.0);
+			
+		}
+	glEnd();
+
 
 	if (poi) {
 debug("calling display list poi\n");
