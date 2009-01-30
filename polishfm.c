@@ -584,6 +584,7 @@ printf("%d: [%s] End of section\n", iLineNo, sSection);
 		}
 		free(sLine);
 	}
+	fclose(pFile);
 } 
 
 /*
