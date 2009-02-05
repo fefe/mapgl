@@ -59,7 +59,7 @@ debug("creating objectList");
 		}
 debug("adding object");
 		activeObject=addObjectToObjectList(activeObjectList);
-printObject(activeObject, 9999);
+//printObject(activeObject, 9999);
 	}
 }
 
@@ -507,7 +507,7 @@ void readPolishFile(char *sFileName) {
 //		char *sLine=NULL;
 debug("while start");
 		//sLine = sGetLine(pFile);
-printf(">%s<", sLine);
+//printf(">%s<", sLine);
 debug("while start 2");
 		strReplace(sLine, ' ', '_');
 debug("while start 3");
@@ -522,7 +522,7 @@ debug("while start 4");
 		if (sLine == NULL) {
 			printf("sLine==NULL\n"); //todo graphical error handling
 		} else {
-			printf("%d >> %s\n", iLineNo, sLine); //debug
+//printf("%d >> %s\n", iLineNo, sLine); //debug
 			//printf("stricmp:%d char:%d\n", stricmp("", sLine), sLine[0]); //debug
 			
 			switch (sLine[0]) {
@@ -547,7 +547,7 @@ debug("while start 4");
 							strncpy(sSection, sTmp, SECTIONWIDTH);
 							//sSection[SECTIONWIDTH]='\0'; //strncpy puts terminating null
 							//printf("%d: [%s]\n", iLineNo, sTmp); //debug
-printf("%d: section found:[%s] found=%d\n", iLineNo, sSection, iTmp);
+//printf("%d: section found:[%s] found=%d\n", iLineNo, sSection, iTmp);
 							processSection(sSection);
 						} else {
 							printf("%d: section not found: length=%d\n", iLineNo, iTmp);
@@ -562,8 +562,8 @@ printf("%d: section found:[%s] found=%d\n", iLineNo, sSection, iTmp);
 							printf("%d: [%s] End of section expected, but not found\n", iLineNo, sSection);
 						} else {
 							//closing section
-printObject(activeObject, 99999);
-printf("%d: [%s] End of section\n", iLineNo, sSection);
+//printObject(activeObject, 99999);
+//printf("%d: [%s] End of section\n", iLineNo, sSection);
 							sSection[0]='\0';
 						}
 					}
@@ -714,10 +714,18 @@ void computeCoordinates(void) {
 	centerlonSin=sin(centerlonRad);
 	centerlonCos=cos(centerlonRad);
 
-printf("maxlat=%f maxlon=%f\n", maxlat, maxlon);
-printf("minlat=%f minlon=%f\n", minlat, minlon);
-printf("centerlat=%f centerlon=%f\n", centerlat, centerlon);
+	minlatRad=toRadian(minlat);
+	minlonRad=toRadian(minlon);
+	minlatSin=sin(minlatRad);
+	minlatCos=cos(minlatRad);
+	minlonSin=sin(minlonRad);
+	minlonCos=cos(minlonRad);
 
+/*
+printf("   maxlat=%f \t    maxlon=%f\n", maxlat, maxlon);
+printf("centerlat=%f \t centerlon=%f\n", centerlat, centerlon);
+printf("   minlat=%f \t    minlon=%f\n", minlat, minlon);
+*/
 	objectList *curOL;
 	curOL=rootObjectList;
 	object *curO;
@@ -725,16 +733,13 @@ printf("centerlat=%f centerlon=%f\n", centerlat, centerlon);
 	point *curP;
 	curP=curO->firstPoint;
 	while (curOL != NULL) {
-debug("whule1 start");
 		while (curO != NULL) {
-debug("whule2 start");
 			while (curP != NULL) {
 				//loop core
 				//convertCoordinateToDistance(curP->lat, curP->lon, centerlat, centerlon, &(curP->x), &(curP->z)); //the other format is more obvious
 				curP->x=convertCoordinateToDistanceX(curP->lon);
 				curP->y=0.0; //todo - correct height for every point
 				curP->z=convertCoordinateToDistanceZ(curP->lat);
-printPoint(curP, 999);
 				//set border values
 				if (curP->x<minx) minx=curP->x; 
 				if (curP->x>maxx) maxx=curP->x; 
@@ -747,21 +752,20 @@ printPoint(curP, 999);
 			}
 			curO=curO->next;
 			if (curO!=NULL) curP=curO->firstPoint;
-debug("whule2 end");
 		}
 		curOL=curOL->next;
 		if (curOL!=NULL) curO=curOL->firstObject;
 		if (curO!=NULL) curP=curO->firstPoint;
-debug("whule1 end");
 	} 
 
 	centerx=(maxx+minx)/2.0;
 	centery=(maxy+miny)/2.0;
 	centerz=(maxz+minz)/2.0;
-debug("itt");
-printf("maxx=%f maxy=%f maxz=%f\n", maxx, maxy, maxz);
-printf("minx=%f miny=%f minz=%f\n", minx, miny, minz);
-printf("centerx=%f centery=%f centerz=%f\n", centerx, centery, centerz);
+/*
+printf("   minx=%f \t    miny=%f \t    minz=%f\n", minx, miny, minz);
+printf("centerx=%f \t centery=%f \t centerz=%f\n", centerx, centery, centerz);
+printf("   maxx=%f \t    maxy=%f \t    maxz=%f\n", maxx, maxy, maxz);
+*/
 
 }
 

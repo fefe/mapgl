@@ -237,6 +237,7 @@ void ChangeSizeOrtho(int w, int h)
 	glLoadIdentity();
 
 printf("koordinata rendszer: x(%f, %f) y(%f, %f) z(%f, %f)\n", minx, maxx, miny, maxy, minz, maxz);
+printf("nRange=%f\n", nRange);
 
 	// Establish clipping volume (left, right, bottom, top, near, far)
 
@@ -342,7 +343,7 @@ int main(int argc, char* argv[])
 
 	readPolishFile("sample_map.mp"); //read the map file to datastructure objects
 	computeCoordinates(); //compute world coordinates from lon/lat data
-	printAll();
+//	printAll();
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -350,7 +351,7 @@ int main(int argc, char* argv[])
 	glutCreateWindow("Map GL");
 
 	//creates the display lists
-printf("************debug: pm");
+//printf("************debug: pm");
 	displayPolishMap();
 	
 	// << Inicializalas

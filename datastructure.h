@@ -53,6 +53,7 @@ point *activePoint;
 float minx, maxx, miny, maxy, minz, maxz, centerx, centery, centerz;
 float minlat, maxlat, minlon, maxlon, centerlat, centerlon;
 float centerlatRad, centerlonRad, centerlatSin, centerlatCos, centerlonSin, centerlonCos;
+float minlatRad, minlonRad, minlatSin, minlatCos, minlonSin, minlonCos;
 int poi, dlPoi;
 int polygon, dlPolygon;
 int polyline, dlPolyline;
