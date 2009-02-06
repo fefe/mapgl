@@ -661,7 +661,8 @@ debug("\tbegin polygon");
 				glColor3f(0.0, 1.0, 1.0);
 			} else if (stricmp("POLYLINE", curOL->sType) == 0) {
 debug("\tbegin line strip");
-				glBegin(GL_LINE_STRIP);
+				glBegin(GL_POINTS);
+				//glBegin(GL_LINE_STRIP);
 				glColor3f(0.0, 1.0, 0.0);
 			} else if (stricmp("other objects", curOL->sType) == 0) {
 			}
