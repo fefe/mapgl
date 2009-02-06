@@ -611,6 +611,64 @@ debug("while start 4");
 	} 
 */
 
+void displayNet(void) {
+	dlNet=glGenLists(1);
+	glNewList(dlNet, GL_COMPILE);
+
+	//axis
+	glBegin(GL_LINES);
+		glColor3f(1.0, 0.0, 0.0);
+		glVertex3f(20.0, 0.0, 0.0);
+		glVertex3f(-20.0, 0.0, 0.0);
+		glColor3f(0.0, 1.0, 0.0);
+		glVertex3f(0.0, 20.0, 0.0);
+		glVertex3f(0.0, -20.0, 0.0);
+		glColor3f(0.0, 0.0, 1.0);
+		glVertex3f(0.0, 0.0, 20.0);
+		glVertex3f(0.0, 0.0, -20.0);
+	glEnd();
+
+	//center
+	glBegin(GL_LINES);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex3f(centerx+1.0, centery, centerz);
+		glVertex3f(centerx-1.0, centery, centerz);
+		glVertex3f(centerx, centery+1.0, centerz);
+		glVertex3f(centerx, centery-1.0, centerz);
+		glVertex3f(centerx, 0.0, centerz+1.0);
+		glVertex3f(centerx, 0.0, centerz-1.0);
+	glEnd();
+
+	//borders
+	glBegin(GL_LINE_LOOP);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex3f(minx, miny, minz);
+		glVertex3f(maxx, miny, minz);
+		glVertex3f(maxx, miny, maxz);
+		glVertex3f(minx, miny, maxz);
+	glEnd();
+
+	//net
+	int i,m;
+	m=(maxx>maxz?maxx:maxz);
+	glBegin(GL_LINES);
+		for (i=0; i<m; i++) {
+			if (i%5 == 0) {
+				glColor3f(0.5, 0.0, 0.0);
+			} else {
+				glColor3f(0.5, 0.5, 0.5);
+			}
+			glVertex3f(0.0, 0.0, i);
+			glVertex3f(m, 0.0, i);
+			glVertex3f(i, 0.0, 0.0);
+			glVertex3f(i, 0.0, m);
+			
+		}
+	glEnd();
+
+	glEndList();
+}
+
 void displayPolishMap(void) {
 	//display the objects stored in the data structure
 	if (rootObjectList == NULL) {
