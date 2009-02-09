@@ -12,6 +12,7 @@ Source: http://cgpsmapper.com/manual.htm
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "stringhandling.h"
 #include "datastructure.h"
 #include "trigonometry.h"
@@ -458,17 +459,20 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		return;
 	}
 	//filtering done, valid sections and keys were found
-	char sTmp[5];
-	strncpy(sTmp, sKey, 4);
-	sTmp[4]='\0';
-	if (bodyObject == 1) {
-		if (stricmp(sTmp, "Data") != 0) {
-			addAttributeToObject(activeObject, sKey, sValue);
-		} else {
-			processData(sValue);
+	{//in a block, so bmp variable do not have to be moved to the beginning
+		char sTmp[5];
+		strncpy(sTmp, sKey, 4);
+		sTmp[4]='\0';
+		if (bodyObject == 1) {
+			if (stricmp(sTmp, "Data") != 0) {
+				addAttributeToObject(activeObject, sKey, sValue);
+			} else {
+				processData(sValue);
+			}
 		}
 	}
 }
+
 
 void processData(char *sData) {
 	int iTmp;
@@ -486,9 +490,14 @@ void processData(char *sData) {
 
 //read polish format map file
 void readPolishFile(char *sFileName) {
+	FILE *pFile;
+	char sSection[SECTIONWIDTH+1]; //todo check all section id for length
+	char sTag[10]; //todo check all tag for length
+	int iLineNo=0;
+	char *sLine=NULL;
+
 	initDataStructure();
 	//Open file
-	FILE *pFile;
 	pFile = fopen(sFileName,"r");
 	if (pFile == NULL) {
 		printf("error opening file: %s\n", sFileName);
@@ -496,12 +505,8 @@ void readPolishFile(char *sFileName) {
 		fclose(pFile);
 		return;
 	}
-	char sSection[SECTIONWIDTH+1]; //todo check all section id for length
 	sSection[0]='\0';
-	char sTag[10]; //todo check all tag for length
 	sTag[0]='\0';
-	int iLineNo=0;
-	char *sLine=NULL;
 	//while (!feof(pFile)) {
 	while (sLine = sGetLine(pFile)) {
 //		char *sLine=NULL;
@@ -538,8 +543,9 @@ debug("while start 4");
 					//sectoin start or end
 					if (sSection[0] == '\0') {
 						//we are not in a section, this is the start
-						int iTmp=strlen(sLine);
-						char sTmp[iTmp+1];
+						int iTmp;
+						char* sTmp;
+						sTmp=(char*)malloc((strlen(sLine)+1)*sizeof(char));
 						iTmp=sscanf(sLine, "[%s]", sTmp);
 						strReplace(sTmp, ']', '\0'); //sscanf reads the ] sign as well, remove it
 						//debug
@@ -552,10 +558,11 @@ debug("while start 4");
 						} else {
 							printf("%d: section not found: length=%d\n", iLineNo, iTmp);
 						}
+						free(sTmp);
 					} else {
 						//we are in a section, this is the close tag
-						int iTmp=strlen(sLine);
-						char sTmp[iTmp+1];
+						char* sTmp;
+						sTmp=(char*)malloc((strlen(sLine)+1)*sizeof(char));
 						sscanf(sLine, "[%3s", sTmp);
 						sTmp[3]='\0';
 						if (stricmp(sTmp, "END") != 0) {
@@ -566,6 +573,7 @@ debug("while start 4");
 //printf("%d: [%s] End of section\n", iLineNo, sSection);
 							sSection[0]='\0';
 						}
+						free(sTmp);
 					}
 					break;
 				default:
@@ -612,6 +620,8 @@ debug("while start 4");
 */
 
 void displayNet(void) {
+	int i,m;
+
 	dlNet=glGenLists(1);
 	glNewList(dlNet, GL_COMPILE);
 
@@ -649,7 +659,6 @@ void displayNet(void) {
 	glEnd();
 
 	//net
-	int i,m;
 	m=(maxx>maxz?maxx:maxz);
 	glBegin(GL_LINES);
 		for (i=0; i<m; i++) {
@@ -671,19 +680,19 @@ void displayNet(void) {
 
 void displayPolishMap(void) {
 	//display the objects stored in the data structure
+	objectList *curOL;
+	object *curO;
+	point *curP;
+	float r,g,b,i;
+
 	if (rootObjectList == NULL) {
 		printf("Root object list is NULL, nothing to display!\n");
 		return;
 	}
 
-	objectList *curOL;
 	curOL=rootObjectList;
-	object *curO;
 	curO=curOL->firstObject;
-	point *curP;
 	curP=curO->firstPoint;
-
-	float r,g,b,i;
 
 	while (curOL != NULL) {
 		if (stricmp("POI", curOL->sType) == 0) {
@@ -725,6 +734,7 @@ debug("\tbegin line strip");
 			} else if (stricmp("other objects", curOL->sType) == 0) {
 			}
 			//todo remove random color
+/*
 			r=random();
 			while (r>1.0) r/=10.0;
 			g=random();
@@ -732,6 +742,7 @@ debug("\tbegin line strip");
 			b=random();
 			while (b>1.0) b/=10.0;
 			printf("random=%f %f %f\n", r, g, b);
+*/
 			//glColor3f(r, g, b);
 			//glColor3f(1.0, 1.0, 0.0);
 			while (curP != NULL) {
@@ -759,6 +770,10 @@ debug("end list");
 
 void computeCoordinates(void) {
 	//update coordinates in every point object
+	objectList *curOL;
+	object *curO;
+	point *curP;
+
 	if (rootObjectList == NULL) {
 		printf("Root object list is NULL, no coordinates to compute!\n");
 		return;
@@ -785,11 +800,8 @@ printf("   maxlat=%f \t    maxlon=%f\n", maxlat, maxlon);
 printf("centerlat=%f \t centerlon=%f\n", centerlat, centerlon);
 printf("   minlat=%f \t    minlon=%f\n", minlat, minlon);
 */
-	objectList *curOL;
 	curOL=rootObjectList;
-	object *curO;
 	curO=curOL->firstObject;
-	point *curP;
 	curP=curO->firstPoint;
 	while (curOL != NULL) {
 		while (curO != NULL) {

@@ -43,7 +43,7 @@ char *sGetLine (FILE *pFile) {
 	return result;
 }
 
-//#define DEBUG 1
+#define DEBUG 1
 
 void debug(char *info) {
 #ifdef DEBUG

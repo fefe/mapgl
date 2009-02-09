@@ -19,6 +19,7 @@ typedef struct pointCoord point;
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "stringhandling.h" 
 #include "datastructure.h" 
@@ -77,6 +78,7 @@ Attribute
 attribute *addAttribute(attribute *curA, char *sKey, char *sValue) {
 	//Adds a new attribute after attribute curA
 	attribute *newA;
+	char *sTmp;
 	newA=(attribute*)malloc(sizeof(attribute));
 	if (newA == NULL) {
 		printf("Can not allocate memory for next attribute!\n");
@@ -85,7 +87,6 @@ attribute *addAttribute(attribute *curA, char *sKey, char *sValue) {
 	if (curA != NULL) {
 		curA->next=newA;
 	}
-	char *sTmp;
 	newA->sKey=(char*)malloc(sizeof(char) * (strlen(sKey)+1)); //todo - error handling for malloc
 	strcpy(newA->sKey, sKey);
 	sTmp=newA->sKey;
@@ -103,11 +104,12 @@ attribute *addAttribute(attribute *curA, char *sKey, char *sValue) {
 
 attribute *addAttributeToObject(object *curO, char *sKey, char *sValue) {
 	//Adds a new attribute to the object curO
+	attribute *newA;
+
 	if (curO == NULL) {
 		printf("Can not add new attribute to object NULL!\n");
 		return NULL;
 	}
-	attribute *newA;
 	if (curO->firstAttribute == NULL) {
 		newA=addAttribute(NULL, sKey, sValue);
 		curO->firstAttribute=newA;
@@ -174,11 +176,12 @@ point *addPoint(point *curP, float lat, float lon) {
 
 point *addPointToObject(object *curO, float lat, float lon) {
 	//Adds a new point to the object curO
+	point *newP;
+
 	if (curO == NULL) {
 		printf("Can not add new point to object NULL!\n");
 		return NULL;
 	}
-	point *newP;
 	if (curO->firstPoint == NULL) {
 		newP=addPoint(NULL, lat, lon);
 		curO->firstPoint=newP;
@@ -238,11 +241,12 @@ object *addObject(object *curO) {
 
 object *addObjectToObjectList(objectList *curOL) {
 	//Adds a new object to the object list curOL
+	object *newO;
+
 	if (curOL == NULL) {
 		printf("Can not add new object to object list NULL!\n");
 		return NULL;
 	}
-	object *newO;
 	if (curOL->firstObject == NULL) {
 		newO=addObject(NULL);
 		curOL->firstObject=newO;
@@ -285,10 +289,9 @@ Object list
 
 objectList *addObjectList(objectList *curOL, char *sType) {
 	//Adds an new object list of type after object list curOL
-	// 
+	objectList *newOL;
 
 printf("------------adding objectlist %s\n", sType);
-	objectList *newOL;
 	newOL=(objectList*)malloc(sizeof(objectList));
 	if (newOL == NULL) {
 		printf("Can not allocate memory for new object list!\n");
@@ -307,10 +310,11 @@ printf("------------adding objectlist %s\n", sType);
 }
 
 objectList *getLastObjectList(void) {
+	objectList *curOL;
+
 	if (rootObjectList == NULL) {
 		return NULL;
 	}
-	objectList *curOL;
 	curOL=rootObjectList;
 	while (curOL->next != NULL) {
 		curOL=curOL->next;
@@ -336,11 +340,12 @@ objectList *getObjectList(char *sType) {
 
 objectList *findObjectList(char *sType) {
 	//Search for an object list of type, starting from the root object list
+	objectList *curOL;
+
 	if (rootObjectList == NULL) {
 		printf("There is no root object list yet, cannot search!\n");
 		return NULL;
 	}
-	objectList *curOL;
 	curOL=rootObjectList;
 	if (stricmp(curOL->sType, sType) == 0) {
 		return curOL;
