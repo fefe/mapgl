@@ -45,6 +45,9 @@ typedef struct objectList {
 	struct objectList *next;
 } objectList;
 
+//globals moved to datastructure.c and datastructure_globals.h separate header file
+
+/*
 objectList *rootObjectList;
 objectList *activeObjectList;
 object *activeObject;
@@ -58,6 +61,7 @@ int dlNet;
 int poi, dlPoi;
 int polygon, dlPolygon;
 int polyline, dlPolyline;
+*/
 
 /*
 	workptr = (psngr_rec*)malloc(sizeof(point));

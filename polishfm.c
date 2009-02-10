@@ -15,6 +15,7 @@ Source: http://cgpsmapper.com/manual.htm
 #include <math.h>
 #include "stringhandling.h"
 #include "datastructure.h"
+#include "datastructure_globals.h"
 #include "trigonometry.h"
 #include "polishfm.h"
 

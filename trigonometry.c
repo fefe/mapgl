@@ -3,6 +3,7 @@
 //#include <stdlib.h>
 #include <math.h>
 #include "datastructure.h"
+#include "datastructure_globals.h"
 #include "stringhandling.h"
 #include "trigonometry.h"
 

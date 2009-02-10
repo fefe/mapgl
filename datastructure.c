@@ -24,6 +24,23 @@ typedef struct pointCoord point;
 #include "stringhandling.h" 
 #include "datastructure.h" 
 
+//globals
+
+objectList *rootObjectList;
+objectList *activeObjectList;
+object *activeObject;
+point *activePoint;
+
+float minx, maxx, miny, maxy, minz, maxz, centerx, centery, centerz;
+float minlat, maxlat, minlon, maxlon, centerlat, centerlon;
+float centerlatRad, centerlonRad, centerlatSin, centerlatCos, centerlonSin, centerlonCos;
+float minlatRad, minlonRad, minlatSin, minlatCos, minlonSin, minlonCos;
+int dlNet;
+int poi, dlPoi;
+int polygon, dlPolygon;
+int polyline, dlPolyline;
+
+
 /*
 	workptr = (psngr_rec*)malloc(sizeof(point));
 	if (workptr == NULL) { printf("Error building the dynamic list\n");

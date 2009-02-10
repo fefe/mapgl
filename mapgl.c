@@ -20,6 +20,7 @@ GLfloat nRange = 0.0f;
 #include <stdlib.h>
 #include <string.h>
 #include "datastructure.h"
+#include "datastructure_globals.h"
 #include "stringhandling.h"
 #include "polishfm.h"
 
