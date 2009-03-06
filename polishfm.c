@@ -13,6 +13,7 @@ Source: http://cgpsmapper.com/manual.htm
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "mapgl.h"
 #include "stringhandling.h"
 #include "datastructure.h"
 #include "datastructure_globals.h"
@@ -20,7 +21,9 @@ Source: http://cgpsmapper.com/manual.htm
 #include "polishfm.h"
 
 void processSection (char *sSection) {
-	int iTmp, bodyObject=0;
+	int iTmp;
+	//int bodyObject=0; //remove warning - value never used
+	int bodyObject;
 
 	/* Body */
 	if (stricmp("POI", sSection) == 0 || stricmp("RGN10", sSection) == 0 || stricmp("RGN20", sSection) == 0) {
@@ -42,7 +45,7 @@ void processSection (char *sSection) {
 		bodyObject=1;
 	} else if (stricmp("DBX", sSection) == 0) {
 		/* Body */
-		bodyObject=1;
+		//bodyObject=1; //remove warning - value never used
 		//undocumented
 		printf("--- Undocumented section found: %s\n", sSection);
 		return;
@@ -442,7 +445,7 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		}
 	} else if (stricmp("DBX", sSection) == 0) {
 		/* Body */
-		bodyObject=1;
+		//bodyObject=1; //remove warning - value never used
 		//undocumented
 		printf("--- Undocumented section found: %s\n", sSection);
 		return;
@@ -495,7 +498,8 @@ void readPolishFile(char *sFileName) {
 	char sSection[SECTIONWIDTH+1]; //todo check all section id for length
 	char sTag[10]; //todo check all tag for length
 	int iLineNo=0;
-	char *sLine=NULL;
+	char *sLine;
+	//char *sLine=NULL; //remove warning - value never used
 
 	initDataStructure();
 	//Open file
@@ -509,7 +513,8 @@ void readPolishFile(char *sFileName) {
 	sSection[0]='\0';
 	sTag[0]='\0';
 	//while (!feof(pFile)) {
-	while (sLine = sGetLine(pFile)) {
+	sLine = sGetLine(pFile);
+	while (sLine) {
 //		char *sLine=NULL;
 debug("while start");
 		//sLine = sGetLine(pFile);
@@ -592,7 +597,9 @@ debug("while start 4");
 			}
 		}
 		free(sLine);
+		sLine = sGetLine(pFile);
 	}
+	free(sLine);
 	fclose(pFile);
 } 
 
@@ -780,7 +787,7 @@ void computeCoordinates(void) {
 		return;
 	}
 
-	centerlat=(maxlat+minlat)/2.0;
+/*	centerlat=(maxlat+minlat)/2.0;
 	centerlon=(maxlon+minlon)/2.0;
 	centerlatRad=toRadian(centerlat);
 	centerlonRad=toRadian(centerlon);
@@ -788,7 +795,7 @@ void computeCoordinates(void) {
 	centerlatCos=cos(centerlatRad);
 	centerlonSin=sin(centerlonRad);
 	centerlonCos=cos(centerlonRad);
-
+*/
 	minlatRad=toRadian(minlat);
 	minlonRad=toRadian(minlon);
 	minlatSin=sin(minlatRad);

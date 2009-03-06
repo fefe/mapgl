@@ -21,6 +21,7 @@ typedef struct pointCoord point;
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "mapgl.h" 
 #include "stringhandling.h" 
 #include "datastructure.h" 
 
@@ -40,6 +41,8 @@ int poi, dlPoi;
 int polygon, dlPolygon;
 int polyline, dlPolyline;
 
+int iImgId; //used in polishfm.c
+char *sImgName;
 
 /*
 	workptr = (psngr_rec*)malloc(sizeof(point));

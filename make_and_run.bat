@@ -1,5 +1,7 @@
 @echo off
 
+PATH=%PATH%;c:\Borland\BCC55\Bin\
+
 del mapgl.exe
 del *.o
 del *.obj

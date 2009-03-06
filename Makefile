@@ -9,10 +9,10 @@ LIBS = -L/usr/X11R6/lib -lX11 -lXi -lXmu -lglut -lGL -lGLU -lm -lpthread
   
 application:$(APPS)
 
-stringhandling.o: stringhandling.c stringhandling.h
-datastructure.o: datastructure.c datastructure.h trigonometry.h stringhandling.h
-polishfm.o: polishfm.c polishfm.h datastructure.h stringhandling.h trigonometry.h
-trigonometry.o: trigonometry.c trigonometry.h datastructure.h stringhandling.h
+stringhandling.o: stringhandling.c stringhandling.h mapgl.h
+datastructure.o: datastructure.c datastructure.h trigonometry.h stringhandling.h mapgl.h
+polishfm.o: polishfm.c polishfm.h datastructure.h stringhandling.h trigonometry.h mapgl.h
+trigonometry.o: trigonometry.c trigonometry.h datastructure.h stringhandling.h mapgl.h
 
 clean:
 	rm -f $(APPS) *.raw *.o core a.out

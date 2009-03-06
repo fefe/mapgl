@@ -19,10 +19,23 @@ GLfloat nRange = 0.0f;
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "mapgl.h"
 #include "datastructure.h"
 #include "datastructure_globals.h"
 #include "stringhandling.h"
 #include "polishfm.h"
+
+//prototypes
+void ProcessMenu(int value);
+void ChangeSizePerspective(GLsizei w, GLsizei h);
+void ChangeSizeOrtho(int w, int h);
+void Idle(void);
+void Timer(int value);
+void Keyboard(unsigned char key, int x, int y);
+void SpecialKeys(int key, int x, int y);
+void SetupRC(void);
+void Display(void);
+
 
 
 // Called to draw scene
@@ -71,7 +84,7 @@ debug("calling display list polyline\n");
 
 // This function does any needed initialization on the rendering
 // context. 
-void SetupRC()
+void SetupRC(void)
 {
 	// Black background
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
@@ -115,6 +128,13 @@ void SpecialKeys(int key, int x, int y)
 		printf("CTRL lenyomva. ");
 	if(state & GLUT_ACTIVE_ALT)
 		printf("ALT lenyomva. ");
+
+	if((state & GLUT_ACTIVE_ALT) && key == GLUT_KEY_F4) {
+		printf("exiting...");
+		exit(0);
+	}
+
+
 	printf("\n");
 	fflush(stdout);
 
@@ -158,7 +178,7 @@ void Timer(int value)
 	glutTimerFunc(1000, Timer, value + 1);
 }
 
-void Idle()
+void Idle(void)
 {
 	if(IdlePrint)
 		printf("Idle esemeny.\n");

@@ -9,12 +9,16 @@ extern object *activeObject;
 extern point *activePoint;
 
 extern float minx, maxx, miny, maxy, minz, maxz, centerx, centery, centerz;
-extern float minlat, maxlat, minlon, maxlon, centerlat, centerlon;
+extern float minlat, maxlat, minlon, maxlon;
 extern float centerlatRad, centerlonRad, centerlatSin, centerlatCos, centerlonSin, centerlonCos;
 extern float minlatRad, minlonRad, minlatSin, minlatCos, minlonSin, minlonCos;
 extern int dlNet;
 extern int poi, dlPoi;
 extern int polygon, dlPolygon;
 extern int polyline, dlPolyline;
+
+extern int iImgId; //used in polishfm.c
+extern char *sImgName;
+
 
 #endif /* __datastrucure_globals_h_*/

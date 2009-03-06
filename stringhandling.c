@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "mapgl.h"
+#include "stringhandling.h"
 
 void strReplace(char *sLine, char s, char d) {
 	//Replace every occurence of s in sLine to d
@@ -43,22 +45,19 @@ char *sGetLine (FILE *pFile) {
 	return result;
 }
 
-//#define DEBUG 1
+//DEBUG defined and activated in mapgl.h
+#ifdef DEBUG
 
 void debug(char *info) {
-#ifdef DEBUG
 	printf("<<<debug>>> %s\n", info);
-#endif /* DEBUG */
 }
 
 void debugi(char *info, int i) {
-#ifdef DEBUG
 	printf("%s%d", info, i);
-#endif /* DEBUG */
 }
 
 void debugf(char *info, float f) {
-#ifdef DEBUG
 	printf("%s%f", info, f);
-#endif /* DEBUG */
 }
+
+#endif /* DEBUG */
