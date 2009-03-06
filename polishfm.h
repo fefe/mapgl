@@ -10,6 +10,9 @@ void processData(char *sData);
 void readPolishFile(char *sFileName);
 void displayNet(void);
 void displayPolishMap(void);
+void displayPOI(object *curO, point *curP);
+void displayPolygon(object *curO, point *curP);
+void displayPolyline(object *curO, point *curP);
 void computeCoordinates(void);
 
 #endif /*__polishfm_h_*/ 

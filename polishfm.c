@@ -484,7 +484,7 @@ void processData(char *sData) {
 	float lat, lon;
 	sToken=strtok( sData, "()");
 	while (sToken != NULL) {
-		iTmp=sscanf(sData, "(%f,%f", &lat, &lon);
+		iTmp=sscanf(sToken, "%f,%f", &lat, &lon);
 		if (iTmp == 2) {
 			addPointToObject(activeObject, lat, lon); //todo - height information is is zero 
 		}
@@ -494,6 +494,7 @@ void processData(char *sData) {
 
 //read polish format map file
 void readPolishFile(char *sFileName) {
+	//todo - crash when first line contains invalid stuff (for example, created by is not commented with ; )
 	FILE *pFile;
 	char sSection[SECTIONWIDTH+1]; //todo check all section id for length
 	char sTag[10]; //todo check all tag for length
@@ -512,18 +513,12 @@ void readPolishFile(char *sFileName) {
 	}
 	sSection[0]='\0';
 	sTag[0]='\0';
-	//while (!feof(pFile)) {
+	//while (!feof(pFile)) // crashed when reached eof, testing sLine instead
 	sLine = sGetLine(pFile);
 	while (sLine) {
-//		char *sLine=NULL;
-debug("while start");
-		//sLine = sGetLine(pFile);
 //printf(">%s<", sLine);
-debug("while start 2");
 		strReplace(sLine, ' ', '_');
-debug("while start 3");
 		iLineNo++;
-debug("while start 4");
 /*
 		if (iLineNo > 80) {
 			//read only the first few lines of the file
@@ -686,7 +681,7 @@ void displayNet(void) {
 	glEndList();
 }
 
-void displayPolishMap(void) {
+void displayPolishMapOld(void) {
 	//display the objects stored in the data structure
 	objectList *curOL;
 	object *curO;
@@ -772,8 +767,116 @@ debug("end list");
 		if (curOL!=NULL) curO=curOL->firstObject;
 		if (curO!=NULL) curP=curO->firstPoint;
 	} 
+}
 
-	
+void displayPolishMap(void) {
+	//display the objects stored in the data structure
+	objectList *curOL;
+	object *curO;
+	point *curP;
+	float r,g,b,i;
+
+	if (rootObjectList == NULL) {
+		printf("Root object list is NULL, nothing to display!\n");
+		return;
+	}
+
+	curOL=rootObjectList;
+	curO=curOL->firstObject;
+	curP=curO->firstPoint;
+
+	while (curOL != NULL) {
+		if (stricmp("POI", curOL->sType) == 0) {
+			displayPOI(curO, curP);
+		} else if (stricmp("POLYGON", curOL->sType) == 0) {
+			displayPolygon(curO, curP);
+		} else if (stricmp("POLYLINE", curOL->sType) == 0) {
+			displayPolyline(curO, curP);
+		} else if (stricmp("other objects", curOL->sType) == 0) {
+debug("unknown object found\n");
+		}
+		curOL=curOL->next; //next objectlist
+		if (curOL!=NULL) curO=curOL->firstObject; //next objectlist, first object
+		if (curO!=NULL) curP=curO->firstPoint; //next objectlist, first object, first point
+	} 
+}
+
+void displayPOI(object *curO, point *curP) {
+	//display all POI
+debug("begin list poi");
+	poi=1;
+	dlPoi=glGenLists(1);
+	glNewList(dlPoi, GL_COMPILE);
+	glPointSize(6.0);
+	glBegin(GL_POINTS);
+	while (curO != NULL) {
+		//glBegin(GL_POINTS);
+		glColor3f(1.0, 0.0, 1.0); //todo - color by POI type
+
+		while (curP != NULL) {
+			//loop core
+			glVertex3f(curP->x, curP->y, curP->z);
+debug("\t\tvertex");
+			curP=curP->next; //next point
+		}
+		curO=curO->next; //next object
+		if (curO!=NULL) curP=curO->firstPoint; //next object, first point
+debug("\tend");
+		//glEnd();
+	}
+	glEnd(); //end points
+	glEndList();
+}
+
+void displayPolygon(object *curO, point *curP) {
+	//display all Polygon
+debug("begin list polygon");
+	polygon=1;
+	dlPolygon=glGenLists(1);
+	glNewList(dlPolygon, GL_COMPILE);
+	while (curO != NULL) {
+debug("\tbegin polygon");
+		glBegin(GL_POLYGON);
+		glColor3f(0.3, 0.4, 0.4); //todo - color by Polygon type
+
+		while (curP != NULL) {
+			//loop core
+			//todo - check polygon vertex order 
+			glVertex3f(curP->x, curP->y, curP->z);
+debug("\t\tvertex");
+			curP=curP->next; //next point
+		}
+		curO=curO->next; //next object
+		if (curO!=NULL) curP=curO->firstPoint; //next object, first point
+debug("\tend");
+		glEnd(); //end polygon
+	}
+	glEndList();
+}
+
+void displayPolyline(object *curO, point *curP) {
+	//display all Polyline
+debug("begin list polyline");
+	polyline=1;
+	dlPolyline=glGenLists(1);
+	glNewList(dlPolyline, GL_COMPILE);
+	while (curO != NULL) {
+debug("\tbegin line strip");
+		glBegin(GL_LINE_STRIP);
+		glColor3f(0.0, 1.0, 0.0); //todo - color by Polyline type
+
+		while (curP != NULL) {
+			//loop core
+			glVertex3f(curP->x, curP->y, curP->z);
+debug("\t\tvertex");
+			curP=curP->next; //next point
+		}
+		curO=curO->next; //next object
+		if (curO!=NULL) curP=curO->firstPoint; //next object, first point
+debug("\tend");
+		glEnd(); //end polyline
+	}
+	glEndList();
 }
 
 void computeCoordinates(void) {
