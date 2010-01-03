@@ -104,5 +104,6 @@ void printAttribute(attribute *curA, int counter);
 void printObject(object *curO, int counter);
 void printObjectList(objectList *curOL, int counter);
 
+char *getAttribute(object *curO, char *sKey);
 
 #endif /* __datastrucure_h_*/

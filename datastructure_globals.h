@@ -12,10 +12,14 @@ extern float minx, maxx, miny, maxy, minz, maxz, centerx, centery, centerz;
 extern float minlat, maxlat, minlon, maxlon;
 extern float centerlatRad, centerlonRad, centerlatSin, centerlatCos, centerlonSin, centerlonCos;
 extern float minlatRad, minlonRad, minlatSin, minlatCos, minlonSin, minlonCos;
+
+extern int lod; //active level of details
+
+//display list variables
 extern int dlNet;
-extern int poi, dlPoi;
-extern int polygon, dlPolygon;
-extern int polyline, dlPolyline;
+extern int poi, dlPoi[10];
+extern int polygon, dlPolygon[10];
+extern int polyline, dlPolyline[10];
 
 extern int iImgId; //used in polishfm.c
 extern char *sImgName;

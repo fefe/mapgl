@@ -60,17 +60,17 @@ void Display(void)
 	if (poi) {
 debug("calling display list poi\n");
 		glColor3f(0.0,1.0,1.0);
-		glCallList(dlPoi);
+		glCallList(dlPoi[lod]);
 	}
 	if (polygon) {
 debug("calling display list polygon\n");
 		glColor3f(1.0,1.0,0.0);
-		glCallList(dlPolygon);
+		glCallList(dlPolygon[lod]);
 	}
 	if (polyline) {
 debug("calling display list polyline\n");
 		glColor3f(1.0,0.0,1.0);
-		glCallList(dlPolyline);
+		glCallList(dlPolyline[lod]);
 	}
 
 
@@ -164,6 +164,18 @@ void Keyboard(unsigned char key, int x, int y)
 			break; 
 		case '-':
 			zoom/=1.1f;
+			break;
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			lod=key-'0';
 			break; 
 	}
 

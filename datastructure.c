@@ -25,7 +25,7 @@ typedef struct pointCoord point;
 #include "stringhandling.h" 
 #include "datastructure.h" 
 
-//globals
+//globals --- NOTE: modify in datastructure_globals.h as well!!!
 
 objectList *rootObjectList;
 objectList *activeObjectList;
@@ -36,10 +36,14 @@ float minx, maxx, miny, maxy, minz, maxz, centerx, centery, centerz;
 float minlat, maxlat, minlon, maxlon, centerlat, centerlon;
 float centerlatRad, centerlonRad, centerlatSin, centerlatCos, centerlonSin, centerlonCos;
 float minlatRad, minlonRad, minlatSin, minlatCos, minlonSin, minlonCos;
+
+int lod; //active level of details
+
+//display list variables
 int dlNet;
-int poi, dlPoi;
-int polygon, dlPolygon;
-int polyline, dlPolyline;
+int poi, dlPoi[10];
+int polygon, dlPolygon[10];
+int polyline, dlPolyline[10];
 
 int iImgId; //used in polishfm.c
 char *sImgName;
@@ -86,7 +90,11 @@ void initDataStructure(void) {
 	centerlat=0.0;
 	centerlon=0.0;
 
+	lod=0;
+
 	poi=0;
+	polygon=0;
+	polyline=0;
 }
 
 /*
@@ -460,5 +468,18 @@ void printObjectList(objectList *curOL, int counter) {
 		printObject(curOL->firstObject, 1);
 	}
 	printObjectList(curOL->next, ++counter);
+}
+
+char *getAttribute(object *curO, char *sKey) {
+	attribute *curA;
+	curA=curO->firstAttribute;
+	while (curA != NULL) {
+		if (stricmp(curA->sKey, sKey) == 0) {
+			return curA->sValue;
+		}
+//printf("%s cura: %s\n", curA, curA->sKey);
+		curA=curA->next;
+	}
+	return NULL;
 }
 

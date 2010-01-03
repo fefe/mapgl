@@ -59,6 +59,7 @@ void processSection (char *sSection) {
 	//filtering done, valid sections were found
 	if (bodyObject == 1) {
 		if (activeObjectList == NULL || stricmp(activeObjectList->sType, sSection) != 0) {
+			//creating object list or finding if it exists in the list
 debug("creating objectList");
 			activeObjectList=getObjectList(sSection);
 		}
@@ -137,9 +138,9 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 			//mandatory
 		} else if (stricmp("Level#", sKey) == 0) {
 			//mandatory
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else if (stricmp("Zoom#", sKey) == 0) {
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else if (stricmp("Preview", sKey) == 0) {
 		} else if (stricmp("AlighMethod", sKey) == 0) {
 		} else if (stricmp("BlockSize", sKey) == 0) {
@@ -157,7 +158,7 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		/*  Declarations */
 		if (stricmp("Country#", sKey) == 0) {
 			//mandatory
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
@@ -166,10 +167,10 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		/*  Declarations */
 		if (stricmp("Region#", sKey) == 0) {
 			//mandatory
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else if (stricmp("CountryIdx#", sKey) == 0) {
 			//mandatory
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
@@ -179,7 +180,7 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		if (stricmp("City#", sKey) == 0) {
 		} else if (stricmp("RegionIdx#", sKey) == 0) {
 			//mandatory
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
@@ -216,8 +217,8 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		/* Advanced declarations */
 		if (stricmp("Level#RGNnn", sKey) == 0) {
 			//mandatory
-			//todo - # has to be replaced in matching patter to a real digit
-			//todo - nn has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
+			//todo - nn has to be replaced in matching pattern to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
@@ -260,7 +261,7 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 			//mandatory
 		} else if (stricmp("Data#", sKey) == 0) {
 			//mandatory
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else if (stricmp("StreetDesc", sKey) == 0) {
 		} else if (stricmp("OvernightParking", sKey) == 0) {
 		} else if (stricmp("Highway", sKey) == 0) {
@@ -269,7 +270,7 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		} else if (stricmp("CountryName", sKey) == 0) {
 		} else if (stricmp("Zip", sKey) == 0) {
 		} else if (stricmp("Exit#", sKey) == 0) {
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
@@ -297,7 +298,7 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 			//mandatory
 		} else if (stricmp("Data#", sKey) == 0) {
 			//mandatory
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
@@ -324,7 +325,7 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 			//mandatory
 		} else if (stricmp("Data#", sKey) == 0) {
 			//mandatory
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else if (stricmp("StreetDesc", sKey) == 0) {
 		} else if (stricmp("DirIndicator", sKey) == 0) {
 		} else if (stricmp("CityName", sKey) == 0) {
@@ -333,10 +334,10 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		} else if (stricmp("Zip", sKey) == 0) {
 		} else if (stricmp("RoadID", sKey) == 0) {
 		} else if (stricmp("Numbers#", sKey) == 0) {
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else if (stricmp("Routeparam", sKey) == 0) {
 		} else if (stricmp("NodID", sKey) == 0) {
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
@@ -352,7 +353,7 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		} else if (stricmp("EndLevel", sKey) == 0) {
 		} else if (stricmp("File#", sKey) == 0) {
 			//mandatory
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
@@ -369,7 +370,7 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		} else if (stricmp("EndLevel", sKey) == 0) {
 		} else if (stricmp("File#", sKey) == 0) {
 			//mandatory
-			//todo - # has to be replaced in matching patter to a real digit
+			//todo - # has to be replaced in matching pattern to a real digit
 		} else {
 			printf("--- Unknown tag found in section %s: %s\n", sSection, sKey);
 			return;
@@ -468,10 +469,14 @@ void processTag (char *sSection, char *sKey, char *sValue) {
 		strncpy(sTmp, sKey, 4);
 		sTmp[4]='\0';
 		if (bodyObject == 1) {
-			if (stricmp(sTmp, "Data") != 0) {
-				addAttributeToObject(activeObject, sKey, sValue);
-			} else {
+			if (stricmp(sTmp, "Data") == 0) {
+				//handle data attributes separate from the rest
+				//CA-custom attribute, adding attribute prefix to avoid tag duplication
+				addAttributeToObject(activeObject, "CALevel", sKey+4); //get level from Data tag, eg: Data3 -> CALevel=3, adding it as a custom attribute CA
 				processData(sValue);
+			} else {
+				//every other attribute
+				addAttributeToObject(activeObject, sKey, sValue);
 			}
 		}
 	}
@@ -486,7 +491,7 @@ void processData(char *sData) {
 	while (sToken != NULL) {
 		iTmp=sscanf(sToken, "%f,%f", &lat, &lon);
 		if (iTmp == 2) {
-			addPointToObject(activeObject, lat, lon); //todo - height information is is zero 
+			addPointToObject(activeObject, lat, lon); //todo - height information is zero 
 		}
 		sToken=strtok( NULL, "()");
 	}
@@ -566,13 +571,13 @@ void readPolishFile(char *sFileName) {
 						sTmp=(char*)malloc((strlen(sLine)+1)*sizeof(char));
 						sscanf(sLine, "[%3s", sTmp);
 						sTmp[3]='\0';
-						if (stricmp(sTmp, "END") != 0) {
-							printf("%d: [%s] End of section expected, but not found\n", iLineNo, sSection);
-						} else {
+						if (stricmp(sTmp, "END") == 0) {
 							//closing section
 //printObject(activeObject, 99999);
 //printf("%d: [%s] End of section\n", iLineNo, sSection);
 							sSection[0]='\0';
+						} else {
+							printf("%d: [%s] End of section expected, but not found\n", iLineNo, sSection);
 						}
 						free(sTmp);
 					}
@@ -681,94 +686,6 @@ void displayNet(void) {
 	glEndList();
 }
 
-void displayPolishMapOld(void) {
-	//display the objects stored in the data structure
-	objectList *curOL;
-	object *curO;
-	point *curP;
-	float r,g,b,i;
-
-	if (rootObjectList == NULL) {
-		printf("Root object list is NULL, nothing to display!\n");
-		return;
-	}
-
-	curOL=rootObjectList;
-	curO=curOL->firstObject;
-	curP=curO->firstPoint;
-
-	while (curOL != NULL) {
-		if (stricmp("POI", curOL->sType) == 0) {
-			poi=1;
-			dlPoi=glGenLists(1);
-			glNewList(dlPoi, GL_COMPILE);
-			glPointSize(6.0);
-debug("begin list poi");
-				//glBegin(GL_POINTS);
-		} else if (stricmp("POLYGON", curOL->sType) == 0) {
-			polygon=1;
-			dlPolygon=glGenLists(1);
-			glNewList(dlPolygon, GL_COMPILE);
-				//glBegin(GL_POLYGON);
-debug("begin list polygon");
-		} else if (stricmp("POLYLINE", curOL->sType) == 0) {
-			polyline=1;
-			dlPolyline=glGenLists(1);
-			glNewList(dlPolyline, GL_COMPILE);
-				//glBegin(GL_LINE_STRIP);
-debug("begin list polyline");
-		} else if (stricmp("other objects", curOL->sType) == 0) {
-		}
-		while (curO != NULL) {
-			if (stricmp("POI", curOL->sType) == 0) {
-debug("\tbegin points");
-				glBegin(GL_POINTS);
-				glColor3f(1.0, 0.0, 1.0);
-			} else if (stricmp("POLYGON", curOL->sType) == 0) {
-debug("\tbegin polygon");
-				glBegin(GL_POINTS);
-				//glBegin(GL_POLYGON);
-				glColor3f(0.0, 1.0, 1.0);
-			} else if (stricmp("POLYLINE", curOL->sType) == 0) {
-debug("\tbegin line strip");
-				glBegin(GL_POINTS);
-				//glBegin(GL_LINE_STRIP);
-				glColor3f(0.0, 1.0, 0.0);
-			} else if (stricmp("other objects", curOL->sType) == 0) {
-			}
-			//todo remove random color
-/*
-			r=random();
-			while (r>1.0) r/=10.0;
-			g=random();
-			while (g>1.0) g/=10.0;
-			b=random();
-			while (b>1.0) b/=10.0;
-			printf("random=%f %f %f\n", r, g, b);
-*/
-			//glColor3f(r, g, b);
-			//glColor3f(1.0, 1.0, 0.0);
-			while (curP != NULL) {
-				//loop core
-				//todo -- setting type specific color
-				glVertex3f(curP->x, curP->y, curP->z);
-debug("\t\tvertex");
-				curP=curP->next;
-			}
-			curO=curO->next;
-			if (curO!=NULL) curP=curO->firstPoint;
-debug("\tend");
-			glEnd();
-		}
-debug("end list");
-			//glEnd();
-		glEndList();
-		curOL=curOL->next;
-		if (curOL!=NULL) curO=curOL->firstObject;
-		if (curO!=NULL) curP=curO->firstPoint;
-	} 
-}
-
 void displayPolishMap(void) {
 	//display the objects stored in the data structure
 	objectList *curOL;
@@ -803,80 +720,120 @@ debug("unknown object found\n");
 
 void displayPOI(object *curO, point *curP) {
 	//display all POI
+	int i;
+	object *curOrig;
 debug("begin list poi");
 	poi=1;
-	dlPoi=glGenLists(1);
-	glNewList(dlPoi, GL_COMPILE);
-	glPointSize(6.0);
-	glBegin(GL_POINTS);
-	while (curO != NULL) {
-		//glBegin(GL_POINTS);
-		glColor3f(1.0, 0.0, 1.0); //todo - color by POI type
 
-		while (curP != NULL) {
-			//loop core
-			glVertex3f(curP->x, curP->y, curP->z);
+	curOrig=curO;
+	for (i=0;i<=9;i++) {
+		//todo -- optimize, not efficient to go through the list this way 
+		curO=curOrig;
+
+		dlPoi[i]=glGenLists(1);
+		glNewList(dlPoi[i], GL_COMPILE);
+		glPointSize(6.0);
+		glBegin(GL_POINTS);
+		while (curO != NULL) {
+			if ( (char)getAttribute(curO, "CALevel")[0]-'0' == i) {
+				//every zoom level has its own display list
+
+				//glBegin(GL_POINTS);
+				glColor3f(1.0, 0.0, 1.0); //todo - color by POI type
+		
+				while (curP != NULL) {
+					//loop core
+					glVertex3f(curP->x, curP->y, curP->z);
 debug("\t\tvertex");
-			curP=curP->next; //next point
-		}
-		curO=curO->next; //next object
-		if (curO!=NULL) curP=curO->firstPoint; //next object, first point
+					curP=curP->next; //next point
+				}
 debug("\tend");
-		//glEnd();
+				//glEnd();
+			}
+			curO=curO->next; //next object
+			if (curO!=NULL) curP=curO->firstPoint; //next object, first point
+		}
+		glEnd(); //end points
+		glEndList();
 	}
-	glEnd(); //end points
-	glEndList();
 }
 
 void displayPolygon(object *curO, point *curP) {
 	//display all Polygon
+	int i;
+	object *curOrig;
 debug("begin list polygon");
 	polygon=1;
-	dlPolygon=glGenLists(1);
-	glNewList(dlPolygon, GL_COMPILE);
-	while (curO != NULL) {
-debug("\tbegin polygon");
-		glBegin(GL_POLYGON);
-		glColor3f(0.3, 0.4, 0.4); //todo - color by Polygon type
 
-		while (curP != NULL) {
-			//loop core
-			//todo - check polygon vertex order 
-			glVertex3f(curP->x, curP->y, curP->z);
+	curOrig=curO;
+	for (i=0;i<=9;i++) {
+		//todo -- optimize, not efficient to go through the list this way 
+		curO=curOrig;
+
+		dlPolygon[i]=glGenLists(1);
+		glNewList(dlPolygon[i], GL_COMPILE);
+		while (curO != NULL) {
+debug("\tbegin polygon");
+			if ( (char)getAttribute(curO, "CALevel")[0]-'0' == i) {
+				//every zoom level has its own display list
+
+				glBegin(GL_POLYGON);
+				glColor3f(0.3, 0.4, 0.4); //todo - color by Polygon type
+		
+				while (curP != NULL) {
+					//loop core
+					//todo - check polygon vertex order 
+					glVertex3f(curP->x, curP->y, curP->z);
 debug("\t\tvertex");
-			curP=curP->next; //next point
-		}
-		curO=curO->next; //next object
-		if (curO!=NULL) curP=curO->firstPoint; //next object, first point
+					curP=curP->next; //next point
+				}
 debug("\tend");
-		glEnd(); //end polygon
+				glEnd(); //end polygon
+			}
+
+			curO=curO->next; //next object
+			if (curO!=NULL) curP=curO->firstPoint; //next object, first point
+		}
+		glEndList();
 	}
-	glEndList();
 }
 
 void displayPolyline(object *curO, point *curP) {
 	//display all Polyline
+	int i;
+	object *curOrig;
 debug("begin list polyline");
 	polyline=1;
-	dlPolyline=glGenLists(1);
-	glNewList(dlPolyline, GL_COMPILE);
-	while (curO != NULL) {
-debug("\tbegin line strip");
-		glBegin(GL_LINE_STRIP);
-		glColor3f(0.0, 1.0, 0.0); //todo - color by Polyline type
 
-		while (curP != NULL) {
-			//loop core
-			glVertex3f(curP->x, curP->y, curP->z);
+	curOrig=curO;
+	for (i=0;i<=9;i++) {
+		//todo -- optimize, not efficient to go through the list this way 
+		curO=curOrig;
+
+		dlPolyline[i]=glGenLists(1);
+		glNewList(dlPolyline[i], GL_COMPILE);
+		while (curO != NULL) {
+debug("\tbegin line strip");
+			if ( (char)getAttribute(curO, "CALevel")[0]-'0' == i) {
+				//every zoom level has its own display list
+
+				glBegin(GL_LINE_STRIP);
+				glColor3f(0.0, 1.0, 0.0); //todo - color by Polyline type
+		
+				while (curP != NULL) {
+					//loop core
+					glVertex3f(curP->x, curP->y, curP->z);
 debug("\t\tvertex");
-			curP=curP->next; //next point
-		}
-		curO=curO->next; //next object
-		if (curO!=NULL) curP=curO->firstPoint; //next object, first point
+					curP=curP->next; //next point
+				}
 debug("\tend");
-		glEnd(); //end polyline
+				glEnd(); //end polyline
+			}
+			curO=curO->next; //next object
+			if (curO!=NULL) curP=curO->firstPoint; //next object, first point
+		}
+		glEndList();
 	}
-	glEndList();
 }
 
 void computeCoordinates(void) {
