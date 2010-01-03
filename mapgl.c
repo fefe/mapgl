@@ -14,7 +14,9 @@ static int IdlePrint = 0;
 GLfloat xRot = 0.0f;
 GLfloat yRot = 0.0f;
 GLfloat zoom = 1.0f; 
-GLfloat nRange = 0.0f; 
+GLfloat nRange = 0.0f;
+
+GLsizei wWin, hWin;
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -108,12 +110,18 @@ void SpecialKeys(int key, int x, int y)
 	if(key == GLUT_KEY_RIGHT)
 		yRot += 5.0f;
 	
-	if(xRot > 356.0f)
-		xRot = 0.0f;
+//	if(xRot > 356.0f)
+//		xRot = 0.0f;
+	
+//	if(xRot < 0.0f)
+//		xRot = 355.0f;
+	
+	if(xRot > 90.0f)
+		xRot = 90.0f;
 	
 	if(xRot < 0.0f)
-		xRot = 355.0f;
-	
+		xRot = 0.0f;
+
 	if(yRot > 356.0f)
 		yRot = 0.0f;
 	
@@ -175,10 +183,34 @@ void Keyboard(unsigned char key, int x, int y)
 		case '7':
 		case '8':
 		case '9':
-			lod=key-'0';
+			lod=key-'0'; //setting zoom level
+			break;
+		case 'w':
+		case 'W':
+			panY-=1.0f;
+			break; 
+		case 'a':
+		case 'A':
+			panX-=1.0f;
+			break; 
+		case 's':
+		case 'S':
+			panY+=1.0f;
+			break; 
+		case 'd':
+		case 'D':
+			panX+=1.0f;
+			break; 
+		case 'u':
+		case 'U':
+			panZ+=1.0f;
+			break; 
+		case 'j':
+		case 'J':
+			panZ-=1.0f;
 			break; 
 	}
-
+	ChangeSizePerspective(wWin, hWin); //todo -- check if it is valid to call
 	glutPostRedisplay();
 }
 
@@ -198,8 +230,9 @@ void Idle(void)
 	glutPostRedisplay();
 }
 
-void ChangeSizeOrtho(int w, int h)
-{
+void ChangeSizeOrtho(int w, int h) {
+	wWin=w;
+	hWin=h;
 
 	//made global variable, used at Display funct for translate
 	//GLfloat nRange=0.0;
@@ -259,9 +292,10 @@ printf("nRange=%f\n", nRange);
 	glLoadIdentity();
 }
 
-void ChangeSizePerspective(GLsizei w, GLsizei h)
-{
+void ChangeSizePerspective(GLsizei w, GLsizei h) {
 	GLfloat fAspect;
+	wWin=w;
+	hWin=h;
 	
 	// Prevent a divide by zero
 	if(h == 0)
@@ -278,14 +312,14 @@ void ChangeSizePerspective(GLsizei w, GLsizei h)
 	
 	// Produce the perspective projection
 	gluPerspective(60.0f,		// fovy
-		 fAspect,	// aspect
-		 10.0,		 // zNear
-		 100.0		 // zFar
-		 );
-	gluLookAt(0.0, 0.0, 50.0, // eye
-			0.0, 0.0, 0.0,	// center
-			0.0, 1.0, 0.0	 // up
-			);
+		fAspect,	// aspect
+		10.0,		 // zNear
+		100.0		 // zFar
+		);
+	gluLookAt(0.0+panX, 0.0+panY, 50.0+panZ, // eye
+		0.0+panX, 0.0+panY, 0.0,	// center
+		0.0, 1.0, 0.0	 // up
+		);
 	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -346,8 +380,8 @@ int main(int argc, char* argv[])
 
 	// >> Callback fuggvenyek
 
-	glutReshapeFunc(ChangeSizeOrtho); // Parhuzamos vetites
-	//glutReshapeFunc(ChangeSizePerspective); // Perspektiv vetites
+	//glutReshapeFunc(ChangeSizeOrtho); // Parhuzamos vetites
+	glutReshapeFunc(ChangeSizePerspective); // Perspektiv vetites
 
 	glutSpecialFunc(SpecialKeys);
 	glutKeyboardFunc(Keyboard);

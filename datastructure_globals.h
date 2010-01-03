@@ -13,6 +13,8 @@ extern float minlat, maxlat, minlon, maxlon;
 extern float centerlatRad, centerlonRad, centerlatSin, centerlatCos, centerlonSin, centerlonCos;
 extern float minlatRad, minlonRad, minlatSin, minlatCos, minlonSin, minlonCos;
 
+extern float panX, panY, panZ;
+
 extern int lod; //active level of details
 
 //display list variables

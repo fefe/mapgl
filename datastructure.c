@@ -37,6 +37,8 @@ float minlat, maxlat, minlon, maxlon, centerlat, centerlon;
 float centerlatRad, centerlonRad, centerlatSin, centerlatCos, centerlonSin, centerlonCos;
 float minlatRad, minlonRad, minlatSin, minlatCos, minlonSin, minlonCos;
 
+float panX, panY, panZ;
+
 int lod; //active level of details
 
 //display list variables
@@ -89,6 +91,10 @@ void initDataStructure(void) {
 	maxlon=-400.0;
 	centerlat=0.0;
 	centerlon=0.0;
+
+	panX=0.0;
+	panY=0.0;
+	panZ=0.0;
 
 	lod=0;
 
