@@ -44,7 +44,7 @@ int lod; //active level of details
 //display list variables
 int dlNet;
 int poi, dlPoi[10];
-int polygon, dlPolygon[10];
+int polygon, dlPolygon[10], dlPolygonL[10];
 int polyline, dlPolyline[10];
 
 int iImgId; //used in polishfm.c

@@ -38,8 +38,6 @@ void SpecialKeys(int key, int x, int y);
 void SetupRC(void);
 void Display(void);
 
-
-
 // Called to draw scene
 void Display(void)
 {
@@ -51,9 +49,17 @@ void Display(void)
 	glRotatef(xRot, 1.0f, 0.0f, 0.0f);
 	glRotatef(yRot, 0.0f, 1.0f, 0.0f);
 	glScalef(zoom, zoom, -zoom);
-	glTranslatef(-centerx, -centery, -centerz);
+	glTranslatef(-centerx, -centery, -centerz); //center is found at gluLookAt
 
 	// >> Modellezo programresz
+
+	//church(); //draw a simple church
+
+/*
+	glTranslatef(5.0, 5.0, 5.0);
+	glutSolidCube(10.0);
+	glTranslatef(-5.0, -5.0, -5.0);
+*/
 
 	//base net
 	glCallList(dlNet);
@@ -67,7 +73,15 @@ debug("calling display list poi\n");
 	if (polygon) {
 debug("calling display list polygon\n");
 		glColor3f(1.0,1.0,0.0);
-		glCallList(dlPolygon[lod]);
+
+		glEnable(GL_POLYGON_OFFSET_FILL); //make sure lines are displayed well
+		glPolygonOffset(1.0, 1.0);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glCallList(dlPolygon[lod]); //filled polygons
+		glDisable(GL_POLYGON_OFFSET_FILL);
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glCallList(dlPolygonL[lod]); //polygon border lines 
 	}
 	if (polyline) {
 debug("calling display list polyline\n");
@@ -109,19 +123,20 @@ void SpecialKeys(int key, int x, int y)
 	
 	if(key == GLUT_KEY_RIGHT)
 		yRot += 5.0f;
-	
-//	if(xRot > 356.0f)
-//		xRot = 0.0f;
-	
-//	if(xRot < 0.0f)
-//		xRot = 355.0f;
-	
-	if(xRot > 90.0f)
-		xRot = 90.0f;
+
+
+	if(xRot > 356.0f)
+		xRot = 0.0f;
 	
 	if(xRot < 0.0f)
-		xRot = 0.0f;
+		xRot = 355.0f;
 
+	if(xRot == 270.0f)
+		xRot = 275.0f;
+
+	if(xRot < 270.0f && xRot>0.0f)
+		xRot = 0.0f;
+	
 	if(yRot > 356.0f)
 		yRot = 0.0f;
 	
@@ -187,7 +202,7 @@ void Keyboard(unsigned char key, int x, int y)
 			break;
 		case 'w':
 		case 'W':
-			panY-=1.0f;
+			panZ-=1.0f;
 			break; 
 		case 'a':
 		case 'A':
@@ -195,7 +210,7 @@ void Keyboard(unsigned char key, int x, int y)
 			break; 
 		case 's':
 		case 'S':
-			panY+=1.0f;
+			panZ+=1.0f;
 			break; 
 		case 'd':
 		case 'D':
@@ -203,12 +218,21 @@ void Keyboard(unsigned char key, int x, int y)
 			break; 
 		case 'u':
 		case 'U':
-			panZ+=1.0f;
+			panY+=1.0f;
 			break; 
 		case 'j':
 		case 'J':
-			panZ-=1.0f;
-			break; 
+			panY-=1.0f;
+			break;
+		case 'r':
+		case 'R':
+			panX=0.0f;
+			panY=0.0f;
+			panZ=0.0f;
+			zoom=1.0f;
+			xRot=0.0f;
+			yRot=0.0f;
+			break;
 	}
 	ChangeSizePerspective(wWin, hWin); //todo -- check if it is valid to call
 	glutPostRedisplay();
@@ -311,15 +335,23 @@ void ChangeSizePerspective(GLsizei w, GLsizei h) {
 	glLoadIdentity();
 	
 	// Produce the perspective projection
-	gluPerspective(60.0f,		// fovy
+	gluPerspective(50.0f,		// fovy
 		fAspect,	// aspect
 		10.0,		 // zNear
-		100.0		 // zFar
+		1000.0		 // zFar
 		);
-	gluLookAt(0.0+panX, 0.0+panY, 50.0+panZ, // eye
-		0.0+panX, 0.0+panY, 0.0,	// center
+printf(">> %f %f %f\n", panX, panY, panZ);
+/*
+	gluLookAt(0.0, 50.0, 50.0, // eye
+		0.0, 0.0, 0.0,	// center
 		0.0, 1.0, 0.0	 // up
 		);
+*/
+	gluLookAt(panX, 50.0+panY, panZ, // eye
+		panX, panY, panZ,	// center
+		0.0, 0.0, -1.0	 // up
+		);
+
 	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

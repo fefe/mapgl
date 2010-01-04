@@ -20,7 +20,7 @@ extern int lod; //active level of details
 //display list variables
 extern int dlNet;
 extern int poi, dlPoi[10];
-extern int polygon, dlPolygon[10];
+extern int polygon, dlPolygon[10], dlPolygonL[10];
 extern int polyline, dlPolyline[10];
 
 extern int iImgId; //used in polishfm.c

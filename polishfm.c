@@ -718,6 +718,74 @@ debug("unknown object found\n");
 	} 
 }
 
+void churchDetails(int fill) {
+	//todo -- move models to separate c source
+
+	if (fill) {
+		glColor3f(0.8, 0.8, 0.8);
+	} else {
+		glColor3f(0.6, 0.6, 0.6);
+	}
+
+	glPushMatrix();
+
+	glScalef(0.1, 0.1, 0.1);
+
+	glPushMatrix();
+		glTranslatef(-2.0, 3.5, 1.0);
+		glScalef(2.0, 7.0, 2.0);
+		glutSolidCube(1.0);
+	glPopMatrix();
+	glPushMatrix();
+		glTranslatef(1.0, 1.5, 2.5);
+		glScalef(4.0, 3.0, 5.0);
+		glutSolidCube(1.0);
+	glPopMatrix();
+	glBegin(GL_TRIANGLE_FAN);
+		glVertex3f(-2, 8, 1);
+		glVertex3f(-3, 7, 0);
+		glVertex3f(-1, 7, 0);
+
+		glVertex3f(-1, 7, 2);
+		glVertex3f(-3, 7, 2);
+		glVertex3f(-3, 7, 0);
+	glEnd();
+	glBegin(GL_TRIANGLES);
+		glVertex3f(-1, 3, 0);
+		glVertex3f(3, 3, 0);
+		glVertex3f(1, 4, 0);
+
+		glVertex3f(-1, 3, 5);
+		glVertex3f(3, 3, 5);
+		glVertex3f(1, 4, 5);
+	glEnd();
+	glBegin(GL_QUADS);
+		glVertex3f(-1, 3, 0);
+		glVertex3f(1, 4, 0);
+		glVertex3f(1, 4, 5);
+		glVertex3f(-1, 3, 5);
+
+		glVertex3f(1, 4, 0);
+		glVertex3f(3, 3, 0);
+		glVertex3f(3, 3, 5);
+		glVertex3f(1, 4, 5);
+	glEnd();
+
+	glPopMatrix();
+}
+
+void church(void) {
+	glEnable(GL_POLYGON_OFFSET_FILL); //make sure lines are displayed well
+	glPolygonOffset(1.0, 1.0);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	churchDetails(1); //filled polygons
+	glDisable(GL_POLYGON_OFFSET_FILL);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	churchDetails(0); //polygon border lines 
+}
+
+
 void displayPOI(object *curO, point *curP) {
 	//display all POI
 	int i;
@@ -733,27 +801,37 @@ debug("begin list poi");
 		dlPoi[i]=glGenLists(1);
 		glNewList(dlPoi[i], GL_COMPILE);
 		glPointSize(6.0);
-		glBegin(GL_POINTS);
 		while (curO != NULL) {
 			if ( (char)getAttribute(curO, "CALevel")[0]-'0' == i) {
 				//every zoom level has its own display list
 
-				//glBegin(GL_POINTS);
-				glColor3f(1.0, 0.0, 1.0); //todo - color by POI type
-		
-				while (curP != NULL) {
-					//loop core
-					glVertex3f(curP->x, curP->y, curP->z);
+				if ( stricmp(getAttribute(curO, "Type"), "0x0306") == 0 || stricmp(getAttribute(curO, "Type"), "0x6404") == 0) {
+					//church
+					while (curP != NULL) {
+printf("church\n");
+						glPushMatrix();
+						glTranslatef(curP->x, curP->y, curP->z);
+						church();
+						glPopMatrix();
+						curP=curP->next; //next point
+					}
+				} else {
+					glBegin(GL_POINTS);
+					glColor3f(1.0, 0.0, 1.0); //todo - color by POI type
+			
+					while (curP != NULL) {
+						//loop core
+						glVertex3f(curP->x, curP->y, curP->z);
 debug("\t\tvertex");
-					curP=curP->next; //next point
-				}
+						curP=curP->next; //next point
+					}
 debug("\tend");
-				//glEnd();
+					glEnd();
+				}
 			}
 			curO=curO->next; //next object
 			if (curO!=NULL) curP=curO->firstPoint; //next object, first point
 		}
-		glEnd(); //end points
 		glEndList();
 	}
 }
@@ -795,6 +873,38 @@ debug("\tend");
 			if (curO!=NULL) curP=curO->firstPoint; //next object, first point
 		}
 		glEndList();
+
+/***********/
+		//polygon border lines with a different color
+		curO=curOrig;
+
+		dlPolygonL[i]=glGenLists(1);
+		glNewList(dlPolygonL[i], GL_COMPILE);
+		while (curO != NULL) {
+debug("\tbegin polygon");
+			if ( (char)getAttribute(curO, "CALevel")[0]-'0' == i) {
+				//every zoom level has its own display list
+
+				glBegin(GL_POLYGON);
+				glColor3f(0.6, 0.6, 1.0); //todo - color by Polygon type
+		
+				while (curP != NULL) {
+					//loop core
+					//todo - check polygon vertex order 
+					glVertex3f(curP->x, curP->y, curP->z);
+debug("\t\tvertex");
+					curP=curP->next; //next point
+				}
+debug("\tend");
+				glEnd(); //end polygon
+			}
+
+			curO=curO->next; //next object
+			if (curO!=NULL) curP=curO->firstPoint; //next object, first point
+		}
+		glEndList();
+
+
 	}
 }
 
@@ -900,11 +1010,11 @@ printf("   minlat=%f \t    minlon=%f\n", minlat, minlon);
 	centerx=(maxx+minx)/2.0;
 	centery=(maxy+miny)/2.0;
 	centerz=(maxz+minz)/2.0;
-/*
+/**/
 printf("   minx=%f \t    miny=%f \t    minz=%f\n", minx, miny, minz);
 printf("centerx=%f \t centery=%f \t centerz=%f\n", centerx, centery, centerz);
 printf("   maxx=%f \t    maxy=%f \t    maxz=%f\n", maxx, maxy, maxz);
-*/
+/**/
 
 }
 
