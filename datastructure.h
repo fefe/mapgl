@@ -17,6 +17,7 @@ typedef struct point {
 	float z;
 	float lat;
 	float lon;
+	double v[3];
 	struct point *prev;
 	struct point *next;
 } point;

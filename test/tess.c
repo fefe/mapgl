@@ -68,7 +68,9 @@ void display (void) {
 
 void CALLBACK beginCallback(GLenum which)
 {
+printf("<b>.");
    glBegin(which);
+printf("</b>");
 }
 
 void CALLBACK errorCallback(GLenum errorCode)
@@ -82,16 +84,20 @@ void CALLBACK errorCallback(GLenum errorCode)
 
 void CALLBACK endCallback(void)
 {
+printf("<e>.");
    glEnd();
+printf("</e>\n");
 }
 
 void CALLBACK vertexCallback(GLvoid *vertex)
 {
    const GLdouble *pointer;
+printf("<v>.");
 
    pointer = (GLdouble *) vertex;
    glColor3dv(pointer+3);
    glVertex3dv(vertex);
+printf("<v>");
 }
 
 /*  combineCallback is used to create a new vertex when edges
@@ -121,6 +127,7 @@ void CALLBACK combineCallback(GLdouble coords[3],
 
 void init (void) 
 {
+   int i;
    GLUtesselator *tobj;
    GLdouble rect[4][3] = {50.0, 50.0, 0.0,
                           200.0, 50.0, 0.0,
@@ -137,6 +144,7 @@ void init (void)
 
    glClearColor(0.0, 0.0, 0.0, 0.0);
 
+
    startList = glGenLists(2);
 
    tobj = gluNewTess();
@@ -152,19 +160,27 @@ void init (void)
    /*  rectangle with triangular hole inside  */
    glNewList(startList, GL_COMPILE);
    glShadeModel(GL_FLAT);    
+printf("a");
    gluTessBeginPolygon(tobj, NULL);
+printf("b");
       gluTessBeginContour(tobj);
+printf("c");
          gluTessVertex(tobj, rect[0], rect[0]);
          gluTessVertex(tobj, rect[1], rect[1]);
          gluTessVertex(tobj, rect[2], rect[2]);
          gluTessVertex(tobj, rect[3], rect[3]);
       gluTessEndContour(tobj);
+printf(" d");
       gluTessBeginContour(tobj);
+printf("e");
          gluTessVertex(tobj, tri[0], tri[0]);
          gluTessVertex(tobj, tri[1], tri[1]);
          gluTessVertex(tobj, tri[2], tri[2]);
+printf("f");
       gluTessEndContour(tobj);
+printf("g");
    gluTessEndPolygon(tobj);
+printf(" h");
    glEndList();
 
    gluTessCallback(tobj, GLU_TESS_VERTEX, 
@@ -192,6 +208,26 @@ void init (void)
          gluTessVertex(tobj, star[4], star[4]);
       gluTessEndContour(tobj);
    gluTessEndPolygon(tobj);
+
+
+	glPushMatrix();
+		glTranslatef(-100.0, 200.0, 0.0);
+		glBegin(GL_POLYGON);
+		for (i=0; i<5; i++) {
+			glColor3f(star[i][3], star[i][4], star[i][5]);
+			glVertex3f(star[i][0], star[i][1], star[i][2]);
+		}
+		glEnd();
+		glColor3f(1,1,1);
+		glBegin(GL_LINE_STRIP);
+			glVertex3f(100, 100, 0);
+			glVertex3f(100, -100, 0);
+			glVertex3f(-100, 0, 0);
+			glVertex3f(100, 0, 0);
+		glEnd();
+	glPopMatrix();
+
+
    glEndList();
    gluDeleteTess(tobj);
 }

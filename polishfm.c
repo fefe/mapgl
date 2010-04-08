@@ -836,10 +836,119 @@ debug("\tend");
 	}
 }
 
+void CALLBACK tessBeginCallback(GLenum which) {
+printf("<b>.");
+	glBegin(which);
+printf("</b>");
+}
+
+void CALLBACK tessErrorCallback(GLenum errorCode) {
+	//todo - error handling
+	const GLubyte *estring;
+printf("<e>.");
+
+	estring = gluErrorString(errorCode);
+	fprintf(stderr, "Tessellation Error: %s\n", estring);
+	exit(0);
+}
+
+void CALLBACK tessEndCallback(void) {
+printf("<e>.");
+	glEnd();
+printf("</e>");
+}
+
+/* - original
+void CALLBACK tessVertexCallback(GLvoid *vertex) {
+	//todo - color per vertex not needed, make it simple
+	const GLdouble *pointer;
+
+printf("<v>.");
+
+	pointer = (GLdouble *) vertex;
+	glColor3dv(pointer+3);
+	glVertex3dv(vertex);
+printf("</v>");
+
+}
+*/
+
+void CALLBACK tessVertexCallback(GLvoid *vertex) {
+printf("<v>");
+	glVertex3dv(vertex);
+printf("</v>");
+}
+
+/* - original
+void CALLBACK tessCombineCallback(GLdouble coords[3], 
+							GLdouble *vertex_data[4],
+							GLfloat weight[4], GLdouble **dataOut ) {
+	//todo - color per vertex not needed, make it simple
+	GLdouble *vertex;
+	int i;
+printf("<cb>.");
+
+	vertex = (GLdouble *) malloc(6 * sizeof(GLdouble));
+
+	vertex[0] = coords[0];
+	vertex[1] = coords[1];
+	vertex[2] = coords[2];
+	for (i = 3; i < 6; i++)
+		vertex[i] = weight[0] * vertex_data[0][i] 
+						+ weight[1] * vertex_data[1][i]
+						+ weight[2] * vertex_data[2][i] 
+						+ weight[3] * vertex_data[3][i];
+	*dataOut = vertex;
+printf("</cb>");
+}
+*/
+
+void CALLBACK tessCombineCallback(GLdouble coords[3], 
+							GLdouble *vertex_data[4],
+							GLfloat weight[4], GLdouble **dataOut ) {
+	//todo - color per vertex not needed, make it simple
+	GLdouble *vertex;
+	int i;
+printf("<cb>.");
+
+	vertex = (GLdouble *) malloc(6 * sizeof(GLdouble));
+
+	vertex[0] = coords[0];
+	vertex[1] = coords[1];
+	vertex[2] = coords[2];
+/*
+	for (i = 3; i < 6; i++)
+		vertex[i] = weight[0] * vertex_data[0][i] 
+						+ weight[1] * vertex_data[1][i]
+						+ weight[2] * vertex_data[2][i] 
+						+ weight[3] * vertex_data[3][i];
+*/
+	*dataOut = vertex;
+printf("</cb>");
+}
+
 void displayPolygon(object *curO, point *curP) {
 	//display all Polygon
-	int i;
+	int i, tesselation;
 	object *curOrig;
+	GLUtesselator *tobj;
+
+	tesselation=1; //activate tesselation
+
+	//creating the tesselator object and binding callback functions
+	if (tesselation==1) {
+		//tesselation active
+		tobj = gluNewTess();
+		gluTessCallback(tobj, GLU_TESS_BEGIN, tessBeginCallback);
+		gluTessCallback(tobj, GLU_TESS_ERROR, tessErrorCallback);
+		gluTessCallback(tobj, GLU_TESS_END, tessEndCallback);
+		gluTessCallback(tobj, GLU_TESS_VERTEX, tessVertexCallback);
+	//	gluTessCallback(tobj, GLU_TESS_VERTEX, glVertex3dv);
+		gluTessCallback(tobj, GLU_TESS_COMBINE, tessCombineCallback);
+
+		gluTessProperty(tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_POSITIVE);
+	}
+	
 debug("begin list polygon");
 	polygon=1;
 
@@ -854,19 +963,45 @@ debug("begin list polygon");
 debug("\tbegin polygon");
 			if ( (char)getAttribute(curO, "CALevel")[0]-'0' == i) {
 				//every zoom level has its own display list
+printf("a");
 
-				glBegin(GL_POLYGON);
 				glColor3f(0.3, 0.4, 0.4); //todo - color by Polygon type
-		
-				while (curP != NULL) {
-					//loop core
-					//todo - check polygon vertex order 
-					glVertex3f(curP->x, curP->y, curP->z);
+				if (tesselation==1) {
+printf("b");
+					//tesselation active
+					gluTessBeginPolygon(tobj, NULL);
+printf("c");
+						gluTessBeginContour(tobj);
+printf("d ");
+
+						while (curP != NULL) {
+							//loop core
+							//todo - check polygon vertex order
+printf("e");
+
+							gluTessVertex(tobj, curP->v, curP->v);
 debug("\t\tvertex");
-					curP=curP->next; //next point
-				}
+printf(".");
+							curP=curP->next; //next point
+						}
+
+						gluTessEndContour(tobj);
+					gluTessEndPolygon(tobj);
+				} else {
+					//no tesselation
+					glBegin(GL_POLYGON);
+//					glColor3f(0.3, 0.4, 0.4); //todo - color by Polygon type
+
+					while (curP != NULL) {
+						//loop core
+						//todo - check polygon vertex order 
+						glVertex3f(curP->x, curP->y, curP->z);
+debug("\t\tvertex");
+						curP=curP->next; //next point
+					}
 debug("\tend");
-				glEnd(); //end polygon
+					glEnd(); //end polygon
+				}
 			}
 
 			curO=curO->next; //next object
@@ -974,9 +1109,9 @@ void computeCoordinates(void) {
 	minlonCos=cos(minlonRad);
 
 /*
-printf("   maxlat=%f \t    maxlon=%f\n", maxlat, maxlon);
+printf("	maxlat=%f \t	 maxlon=%f\n", maxlat, maxlon);
 printf("centerlat=%f \t centerlon=%f\n", centerlat, centerlon);
-printf("   minlat=%f \t    minlon=%f\n", minlat, minlon);
+printf("	minlat=%f \t	 minlon=%f\n", minlat, minlon);
 */
 	curOL=rootObjectList;
 	curO=curOL->firstObject;
@@ -989,6 +1124,11 @@ printf("   minlat=%f \t    minlon=%f\n", minlat, minlon);
 				curP->x=convertCoordinateToDistanceX(curP->lon);
 				curP->y=0.0; //todo - correct height for every point
 				curP->z=convertCoordinateToDistanceZ(curP->lat);
+				//todo - modify every reference to use only v vertex vektor
+				//todo - modify all computation from float to double
+				curP->v[0]=curP->x;
+				curP->v[1]=curP->y;
+				curP->v[2]=curP->z;
 				//set border values
 				if (curP->x<minx) minx=curP->x; 
 				if (curP->x>maxx) maxx=curP->x; 
@@ -1011,9 +1151,9 @@ printf("   minlat=%f \t    minlon=%f\n", minlat, minlon);
 	centery=(maxy+miny)/2.0;
 	centerz=(maxz+minz)/2.0;
 /**/
-printf("   minx=%f \t    miny=%f \t    minz=%f\n", minx, miny, minz);
+printf("	minx=%f \t	 miny=%f \t	 minz=%f\n", minx, miny, minz);
 printf("centerx=%f \t centery=%f \t centerz=%f\n", centerx, centery, centerz);
-printf("   maxx=%f \t    maxy=%f \t    maxz=%f\n", maxx, maxy, maxz);
+printf("	maxx=%f \t	 maxy=%f \t	 maxz=%f\n", maxx, maxy, maxz);
 /**/
 
 }

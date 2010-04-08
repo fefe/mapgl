@@ -11,6 +11,12 @@ void readPolishFile(char *sFileName);
 void displayNet(void);
 void displayPolishMap(void);
 void displayPOI(object *curO, point *curP);
+
+void CALLBACK tessBeginCallback(GLenum which);
+void CALLBACK tessErrorCallback(GLenum errorCode);
+void CALLBACK tessEndCallback(void);
+void CALLBACK tessVertexCallback(GLvoid *vertex);
+
 void displayPolygon(object *curO, point *curP);
 void displayPolyline(object *curO, point *curP);
 void computeCoordinates(void);
