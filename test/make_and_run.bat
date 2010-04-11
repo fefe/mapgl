@@ -1,7 +1,6 @@
 @echo off
 
-set app=tesselation
-set app=tess
+set app=select
 
 PATH=%PATH%;c:\Borland\BCC55\Bin\
 

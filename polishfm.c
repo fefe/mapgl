@@ -805,7 +805,7 @@ debug("begin list poi");
 			if ( (char)getAttribute(curO, "CALevel")[0]-'0' == i) {
 				//every zoom level has its own display list
 
-				if ( stricmp(getAttribute(curO, "Type"), "0x0306") == 0 || stricmp(getAttribute(curO, "Type"), "0x6404") == 0) {
+				if ( 0 && ( stricmp(getAttribute(curO, "Type"), "0x0306") == 0 || stricmp(getAttribute(curO, "Type"), "0x6404") == 0 ) ) {
 					//church
 					while (curP != NULL) {
 printf("church\n");
@@ -1121,9 +1121,13 @@ printf("	minlat=%f \t	 minlon=%f\n", minlat, minlon);
 			while (curP != NULL) {
 				//loop core
 				//convertCoordinateToDistance(curP->lat, curP->lon, centerlat, centerlon, &(curP->x), &(curP->z)); //the other format is more obvious
-				curP->x=convertCoordinateToDistanceX(curP->lon);
+				//test todo - no conversion to distance, using lon and lat
+				//CurP->x=convertCoordinateToDistanceX(curP->lon);
+				curP->x=curP->lon;
 				curP->y=0.0; //todo - correct height for every point
-				curP->z=convertCoordinateToDistanceZ(curP->lat);
+				//test todo - no conversion to distance, using lon and lat
+				//curP->z=convertCoordinateToDistanceZ(curP->lat);
+				curP->z=curP->lat;
 				//todo - modify every reference to use only v vertex vektor
 				//todo - modify all computation from float to double
 				curP->v[0]=curP->x;
