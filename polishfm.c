@@ -498,7 +498,7 @@ void processData(char *sData) {
 }
 
 //read polish format map file
-void readPolishFile(char *sFileName) {
+int readPolishFile(char *sFileName) {
 	//todo - crash when first line contains invalid stuff (for example, created by is not commented with ; )
 	FILE *pFile;
 	char sSection[SECTIONWIDTH+1]; //todo check all section id for length
@@ -512,9 +512,9 @@ void readPolishFile(char *sFileName) {
 	pFile = fopen(sFileName,"r");
 	if (pFile == NULL) {
 		printf("error opening file: %s\n", sFileName);
-		//todo graphical error handling
+		//todo graphical error handling and opening file from gui
 		fclose(pFile);
-		return;
+		return(1);
 	}
 	sSection[0]='\0';
 	sTag[0]='\0';
@@ -601,6 +601,7 @@ void readPolishFile(char *sFileName) {
 	}
 	free(sLine);
 	fclose(pFile);
+	return(0);
 } 
 
 /*

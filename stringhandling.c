@@ -49,7 +49,7 @@ char *sGetLine (FILE *pFile) {
 #ifdef DEBUG
 
 void debug(char *info) {
-	printf("<<<debug>>> %s\n", info);
+	printf("<<<debug>>> %s", info);
 }
 
 void debugi(char *info, int i) {

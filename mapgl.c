@@ -1,46 +1,55 @@
-
+//standard includes
 #include <GL/glut.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// Define a constant for the value of PI
-#define GL_PI 3.1415926536f
-
-static int MenuID, IdleMenu;
-static int IdlePrint = 0;
-
-GLfloat xRot = 0.0f;
-GLfloat yRot = 0.0f;
-GLfloat zoom = 1.0f; 
-GLfloat nRange = 0.0f;
-
-GLsizei wWin, hWin;
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+//custom includes
 #include "mapgl.h"
 #include "datastructure.h"
 #include "datastructure_globals.h"
 #include "stringhandling.h"
 #include "polishfm.h"
 
+// Define a constant for the value of PI
+#define GL_PI 3.1415926536f
+
+//global variables
+int argDebug;
+static int MenuID, IdleMenu;
+static int IdlePrint = 0;
+
+//transformations
+GLfloat xRot = 0.0f;
+GLfloat yRot = 0.0f;
+GLfloat zoom = 1.0f; 
+GLfloat nRange = 0.0f;
+
+//windows size
+GLsizei wWin, hWin;
+
 //prototypes
-void ProcessMenu(int value);
-void ChangeSizePerspective(GLsizei w, GLsizei h);
-void ChangeSizeOrtho(int w, int h);
-void Idle(void);
-void Timer(int value);
-void Keyboard(unsigned char key, int x, int y);
-void SpecialKeys(int key, int x, int y);
 void SetupRC(void);
 void Display(void);
+void SpecialKeys(int key, int x, int y);
+void Keyboard(unsigned char key, int x, int y);
+void Timer(int value);
+void Idle(void);
+void ChangeSizeOrtho(int w, int h);
+void ChangeSizePerspective(GLsizei w, GLsizei h);
+void ProcessMenu(int value);
+
+// This function does any needed initialization on the rendering
+// context. 
+void SetupRC(void) {
+	// Black background
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
+	glEnable(GL_DEPTH_TEST);
+}
 
 // Called to draw scene
-void Display(void)
-{
+void Display(void) {
 	// Clear the window with current clearing color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -98,17 +107,7 @@ debug("calling display list polyline\n");
 	glutSwapBuffers();
 }
 
-// This function does any needed initialization on the rendering
-// context. 
-void SetupRC(void)
-{
-	// Black background
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
-	glEnable(GL_DEPTH_TEST);
-}
-
-void SpecialKeys(int key, int x, int y)
-{
+void SpecialKeys(int key, int x, int y) {
 	// ...
 	int state;
 
@@ -165,8 +164,7 @@ void SpecialKeys(int key, int x, int y)
 	glutPostRedisplay();
 }
 
-void Keyboard(unsigned char key, int x, int y)
-{
+void Keyboard(unsigned char key, int x, int y) {
 	// ...
 	int state;
 
@@ -238,16 +236,14 @@ void Keyboard(unsigned char key, int x, int y)
 	glutPostRedisplay();
 }
 
-void Timer(int value)
-{
+void Timer(int value) {
 	printf("Timer esemeny (%d)\n", value);
 
 	glutPostRedisplay();
 	glutTimerFunc(1000, Timer, value + 1);
 }
 
-void Idle(void)
-{
+void Idle(void) {
 	if(IdlePrint)
 		printf("Idle esemeny.\n");
 
@@ -357,8 +353,7 @@ printf(">> %f %f %f\n", panX, panY, panZ);
 	glLoadIdentity();
 }
 
-void ProcessMenu(int value)
-{
+void ProcessMenu(int value) {
 	switch(value)
 		{
 		case 1:
@@ -389,35 +384,90 @@ void ProcessMenu(int value)
 	glutPostRedisplay();
 }
 
-int main(int argc, char* argv[])
-{
-	// >> Inicializalas
+int main(int argc, char* argv[]) {
+	//process commandline arguments
+	int argFile=0, argTransformation=0;
+	char *argFileName;
+	int i, j, tmp;
+	j=argc-1; //tracking, if all the arguments were processed
+	for (i=1; i<argc; i++) {
+		//skipping argv[0] - program name
+		if (strcmp(argv[i], "--help")==0 || strcmp(argv[i], "-h")==0) {
+			fprintf(stderr, "usage: %s [options]\n", argv[0]);
+			//fprintf(stderr, "");
+			fprintf(stderr, "\t-h\n\t--help\n");
+			fprintf(stderr, "\t\tthis help message\n");
+			fprintf(stderr, "\t-d\n\t--debug\n");
+			fprintf(stderr, "\t\tprint debug messages\n");
+			fprintf(stderr, "\t-f <file_name>\n\t--file <file_name>\n");
+			fprintf(stderr, "\t\tload this map file\n");
+			fprintf(stderr, "\t-t <0|1|2>\n\t--transformation <0|1|2>\n");
+			fprintf(stderr, "\t\tdefine, how coordinate transformation should happen\n");
+			exit(1);
+		} else if (strcmp(argv[i], "--debug")==0 || strcmp(argv[i], "-d")==0) {
+			argDebug=1;
+			j--;
+		} else if (strcmp(argv[i], "--file")==0 || strcmp(argv[i], "-f")==0) {
+			argFile=1;
+			j--;
 
-	readPolishFile("sample_map.mp"); //read the map file to datastructure objects
+			if (i<argc) {
+				i++; //preventing loop from reading this argument again
+				argFileName=argv[i];
+			}
+			j--;
+		} else if (strcmp(argv[i], "--transformation")==0 || strcmp(argv[i], "-t")==0) {
+			//
+			j--;
+
+			if (i<argc) {
+				i++; //preventing loop from reading this argument again
+				argTransformation=atoi(argv[i]);
+			}
+			j--;
+		}
+	}
+	if (j!=0) {
+		//if all the arguments were processed sucessfully, j should be 0
+		fprintf(stderr, "error: wrong parameters, exiting");
+		exit(1);
+	}
+	
+	// load map file
+	if (argFile==1) {
+		tmp=readPolishFile(argFileName); //read the map file to datastructure objects
+	} else {
+		tmp=readPolishFile("sample_map.mp"); //read the map file to datastructure objects
+	}
+	if (tmp==1) {
+		//there was an error with reading the map file
+		fprintf(stderr, "error: couldn't load map file, exiting");
+		exit(1);
+	}
 	computeCoordinates(); //compute world coordinates from lon/lat data
 //	printAll();
 
+	//Init
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	//glutInitWindowSize(300, 300);
 	glutCreateWindow("Map GL");
 
-
-	//creates the display lists
+	//create the display lists
 	displayNet();
 //printf("************debug: pm");
 	displayPolishMap();
 	
-	// << Inicializalas
+	// << Init
 
 	// >> Callback fuggvenyek
 
 	//glutReshapeFunc(ChangeSizeOrtho); // Parhuzamos vetites
 	glutReshapeFunc(ChangeSizePerspective); // Perspektiv vetites
 
+	glutDisplayFunc(Display);
 	glutSpecialFunc(SpecialKeys);
 	glutKeyboardFunc(Keyboard);
-	glutDisplayFunc(Display);
 	glutTimerFunc(1000, Timer, 1); // 1 mp mulva meghivodik a Timer() fuggveny
 	//glutIdleFunc(Idle); // Idle(), ha nem tortenik semmi
 	

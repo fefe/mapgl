@@ -7,7 +7,7 @@
 void processSection (char *sSection);
 void processTag (char *sSection, char *sKey, char *sValue);
 void processData(char *sData);
-void readPolishFile(char *sFileName);
+int  readPolishFile(char *sFileName);
 void displayNet(void);
 void displayPolishMap(void);
 void displayPOI(object *curO, point *curP);
