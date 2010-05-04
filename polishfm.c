@@ -1055,7 +1055,7 @@ debug("begin list polyline");
 	for (i=0;i<=9;i++) {
 		//todo -- optimize, not efficient to go through the list this way 
 		curO=curOrig;
-
+				
 		dlPolyline[i]=glGenLists(1);
 		glNewList(dlPolyline[i], GL_COMPILE);
 		while (curO != NULL) {
