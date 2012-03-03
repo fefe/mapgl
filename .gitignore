@@ -1,0 +1,8 @@
+
+# ignore object files and compiled binaries
+*.obj
+*.exe
+*.tds
+
+# ignore map files
+*.mp
